@@ -33,7 +33,7 @@ public class HardwareK9bot
     public DcMotor  rightDrive  = null;
     /*
     public DcMotor    lifter = null;
-    public Servo    armR = null;
+    public Servo     armR = null;
     public Servo  armL = null;
 	*/
 
