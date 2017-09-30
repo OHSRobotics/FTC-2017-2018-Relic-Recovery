@@ -34,7 +34,7 @@ public class HardwareK9bot
     /*
     public DcMotor    lifter = null;
     public Servo    armR = null;
-    public Servo armL = null;
+    public Servo  armL = null;
 	*/
 
     public final static double ARM_HOME = 0.2;
