@@ -39,7 +39,7 @@ public class K9botTeleopTank_Linear extends LinearOpMode {
             right = -gamepad1.right_stick_y;
             robot.leftDrive.setPower(left);
             robot.rightDrive.setPower(right);
-            */
+             */
             double turn = gamepad1.right_stick_x;
             double lateral = gamepad1.left_stick_x;
             double forward = -gamepad1.left_stick_y;
