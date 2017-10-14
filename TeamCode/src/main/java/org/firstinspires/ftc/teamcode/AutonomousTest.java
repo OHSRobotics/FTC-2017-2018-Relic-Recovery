@@ -56,18 +56,18 @@ import java.util.List;
 @Autonomous(name="Test Autonomous", group="K9bot")
 public class AutonomousTest extends LinearOpMode {
 
-    /* Declare OpMode members. */
-    HardwareK9bot   robot           = new HardwareK9bot();   // Use a Pushbot's hardware
+    private HardwareK9bot   robot           = new HardwareK9bot();   // Use a Pushbot's hardware
     private ElapsedTime     runtime = new ElapsedTime();
 
-    static final double     COUNTS_PER_MOTOR_REV    = 1440 ;    // eg: TETRIX Motor Encoder
-    static final double     DRIVE_GEAR_REDUCTION    = 2.0 ;     // This is < 1.0 if geared UP
-    static final double     WHEEL_DIAMETER_INCHES   = 4.0 ;     // For figuring circumference
-    static final double     COUNTS_PER_INCH         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
+    protected static final double     COUNTS_PER_MOTOR_REV    = 1440 ;    // eg: TETRIX Motor Encoder
+    protected static final double     DRIVE_GEAR_REDUCTION    = 2.0 ;     // This is < 1.0 if geared UP
+    protected static final double     WHEEL_DIAMETER_INCHES   = 4.0 ;     // For figuring circumference
+    protected static final double     COUNTS_PER_INCH         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
             (WHEEL_DIAMETER_INCHES * 3.1415);
-    static final double     DRIVE_SPEED             = 0.6;
-    static final double     TURN_SPEED              = 0.5;
-    static RelicRecoveryVuMark vuMark;
+    protected static final double     DRIVE_SPEED             = 0.6;
+    protected static final double     TURN_SPEED              = 0.5;
+    protected static RelicRecoveryVuMark vuMark;
+    public static final double SQRT_2 = Math.sqrt(2.0);
 
     @Override
     public void runOpMode() {
@@ -140,8 +140,8 @@ public class AutonomousTest extends LinearOpMode {
     public void goSideways(double speed, double targetDistance, double timeoutS){
         int inwardTarget, outwardTarget;
         if (opModeIsActive()){
-            inwardTarget = robot.rightBack.getCurrentPosition() + (int)(targetDistance * COUNTS_PER_INCH * Math.sqrt(2));
-            outwardTarget = robot.rightDrive.getCurrentPosition() + (int)(targetDistance * COUNTS_PER_INCH * -1 * Math.sqrt(2));
+            inwardTarget = robot.rightBack.getCurrentPosition() + (int)(targetDistance * COUNTS_PER_INCH * SQRT_2);
+            outwardTarget = robot.rightDrive.getCurrentPosition() + (int)(targetDistance * COUNTS_PER_INCH * -1 * SQRT_2);
             robot.leftDrive.setTargetPosition(inwardTarget);
             robot.leftBack.setTargetPosition(inwardTarget);
             robot.rightDrive.setTargetPosition(outwardTarget);
@@ -247,5 +247,9 @@ public class AutonomousTest extends LinearOpMode {
 
             //  sleep(250);   // optional pause after each move
         }
+    }
+
+    public ElapsedTime getElapsedTime() {
+        return runtime;
     }
 }
