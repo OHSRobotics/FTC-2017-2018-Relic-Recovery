@@ -36,10 +36,35 @@ public class MovementHelper{
         this.opMode = opMode;
     }
 
+    public void goRight(double speed, double distance, double timeoutS){
+        goSideways(speed, distance, timeoutS);
+    }
+
+    public void goLeft(double speed, double distance, double timeoutS){
+        goSideways(speed, -distance, timeoutS);
+    }
+
+    public void rotateCounterClockWise(double degrees, double speed) {
+        rotate(degrees, speed);
+    }
+
+    public void rotateClockWise(double degrees, double speed) {
+        rotate(-degrees, speed);
+    }
+
+    public void rotate(double degrees, double speed) {
+        if(red)
+            degrees = -degrees;
+
+        //Set motors to rotate
+
+    }
+
+
     public void goSideways(double speed, double targetDistance, double timeoutS){
-        if(red) {
+        if(red)
             targetDistance = -targetDistance;
-        }
+
         int inwardTarget, outwardTarget;
         if (opMode.opModeIsActive()){
             inwardTarget = map.rightBack.getCurrentPosition() + (int)(targetDistance * AutonomousTest.COUNTS_PER_INCH * Math.sqrt(2));
