@@ -1,3 +1,12 @@
+This is the github repository that the Oakton High School 369 FTC Robotics Team will use to store all code during develepment.
+We are very excited to participate in the 2017-2018 Relic recovery FTC challenge. During the autonomous protionour robot will
+attempt to detect the color of the jewel and decipher the pictograph. With this information we will hit off the correct jewel
+and place the glyph in the correct row according to the information received from the pictograph. In total this *should* give our
+team a 85 point lead before the teleop portion.
+
+##Default readme.md from FTC
+
+
 ## Welcome!
 This GitHub repository contains the source code that is used to build an Android app to control a *FIRST* Tech Challenge competition robot.  To use this SDK, download/clone the entire project to your local computer.
 
