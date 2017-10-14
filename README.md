@@ -4,7 +4,7 @@ attempt to detect the color of the jewel and decipher the pictograph. With this 
 and place the glyph in the correct row according to the information received from the pictograph. In total this *should* give our
 team a 85 point lead before the teleop portion.
 
-##Default readme.md from FTC
+## Default readme.md from FTC
 
 
 ## Welcome!
