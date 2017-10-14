@@ -3,12 +3,12 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.Range;
-
+import com.qualcomm.robotcore.hardware.Gamepad;
 import org.firstinspires.ftc.teamcode.HardwareK9bot;
 
 @TeleOp(name="K9bot: Telop Tank", group="K9bot")
-@Disabled
 public class K9botTeleopTank_Linear extends LinearOpMode {
 
     /* Declare OpMode members. */
@@ -24,8 +24,13 @@ public class K9botTeleopTank_Linear extends LinearOpMode {
          */
         robot.init(hardwareMap);
 
+        robot.leftDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        robot.rightDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        robot.leftBack.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        robot.rightBack.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
         // Send telemetry message to signify robot waiting;
-        telemetry.addData("Say", "Hello Driver");    //
+        telemetry.addData("Say", "haha justin is an idi0t");    //
         telemetry.update();
 
         // Wait for the game to start (driver presses PLAY)
@@ -40,9 +45,9 @@ public class K9botTeleopTank_Linear extends LinearOpMode {
             robot.leftDrive.setPower(left);
             robot.rightDrive.setPower(right);
              */
-            double turn = gamepad1.right_stick_x;
-            double lateral = gamepad1.left_stick_x;
-            double forward = -gamepad1.left_stick_y;
+            double turn = gamepad1.left_stick_x;
+            double lateral = gamepad1.right_stick_x;
+            double forward = -gamepad1.right_stick_y;
 
             robot.leftDrive.setPower(forward + lateral + turn);
             robot.leftBack.setPower(forward - lateral +  turn);
@@ -66,16 +71,13 @@ public class K9botTeleopTank_Linear extends LinearOpMode {
             robot.arm.setPosition(armPosition);
             clawPosition = Range.clip(clawPosition, robot.CLAW_MIN_RANGE, robot.CLAW_MAX_RANGE);
             robot.claw.setPosition(clawPosition);
-
-            // Send telemetry message to signify robot running;
-            telemetry.addData("arm",   "%.2f", armPosition);
-            telemetry.addData("claw",  "%.2f", clawPosition);
-            telemetry.addData("left",  "%.2f", left);
-            telemetry.addData("right", "%.2f", right);
-            telemetry.update();
             */
+            telemetry.addData("lateral",  "%.2f", lateral);
+            telemetry.addData("forward", "%.2f", forward);
+            telemetry.update();
+
             // Pause for 40 mS each cycle = update 25 times a second.
-            sleep(40);
+            sleep(10);
         }
     }
 }
