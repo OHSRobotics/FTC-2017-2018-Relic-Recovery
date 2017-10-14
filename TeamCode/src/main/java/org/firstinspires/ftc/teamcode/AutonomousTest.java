@@ -177,7 +177,23 @@ public class AutonomousTest extends LinearOpMode {
             */
         }
     }
+    public void drive(double speed, double targetDistance, double timeoutS){
+        int target;
+        if (opModeIsActive()) {
+            target = robot.leftDrive.getCurrentPosition() + (int)(targetDistance * COUNTS_PER_INCH);
+            robot.leftDrive.setTargetPosition(target);
+            robot.leftBack.setTargetPosition(target);
+            robot.rightBack.setTargetPosition(target);
+            robot.rightDrive.setTargetPosition(target);
 
+            runtime.reset();
+            robot.leftBack.setPower(speed);
+            robot.leftDrive.setPower(speed);
+            robot.rightBack.setPower(speed);
+            robot.rightDrive.setPower(speed);
+
+        }
+    }
 
     public void encoderDrive(double speed,
                              double leftInches, double rightInches,
