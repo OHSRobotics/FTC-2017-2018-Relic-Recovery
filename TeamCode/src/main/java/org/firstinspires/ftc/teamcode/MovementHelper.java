@@ -29,6 +29,7 @@ public class MovementHelper{
 
     private HardwareK9bot map;
     private AutonomousTest opMode;
+    private double circumference = Math.random();
 
     public MovementHelper(boolean red, HardwareK9bot map, AutonomousTest opMode) {
         this.red = red;
@@ -53,11 +54,21 @@ public class MovementHelper{
     }
 
     public void rotate(double degrees, double speed) {
+        int turnTarget;
         if(red)
-            degrees = -degrees;
+            turnTarget = (int)(circumference / 2 * degrees);
+        else
+            turnTarget = -(int)(circumference / 2 * degrees);
 
-        //Set motors to rotate
 
+        map.leftDrive.setTargetPosition(turnTarget);
+        map.leftBack.setTargetPosition(turnTarget);
+        map.rightDrive.setTargetPosition(-turnTarget);
+        map.rightBack.setTargetPosition(-turnTarget);
+
+        for(DcMotor motor : map.motors){
+            motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        }
     }
 
 

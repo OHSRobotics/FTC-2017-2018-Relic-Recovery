@@ -5,24 +5,6 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-/**
- * This is NOT an opmode.
- *
- * This class can be used to define all the specific hardware for a single robot.
- * In this case that robot is a K9 robot.
- *
- * This hardware class assumes the following device names have been configured on the robot:
- * Note:  All names are lower case and some have single spaces between words.
- *
- * Motor channel:  Left  drive motor:        "left_drive"
- * Motor channel:  Right drive motor:        "right_drive"
- * Servo channel:  Servo to raise/lower arm: "arm"
- * Servo channel:  Servo to open/close claw: "claw"
- *
- * Note: the configuration of the servos is such that:
- *   As the arm servo approaches 0, the arm position moves up (away from the floor).
- *   As the claw servo approaches 0, the claw opens up (drops the game element).
- */
 public class HardwareK9bot
 {
     /* Public OpMode members. */
@@ -31,10 +13,11 @@ public class HardwareK9bot
     public DcMotor rightBack = null;
     public DcMotor  leftDrive   = null;
     public DcMotor  rightDrive  = null;
+
+    public DcMotor motors[] = new DcMotor[4];
     /*
     public DcMotor    lifter = null;
-    public Servo     armR = null;
-    public Servo  armL = null;
+    public Servo     arm = null;
 	*/
     /*
     public final static double ARM_HOME = 0.2;
@@ -66,6 +49,10 @@ public class HardwareK9bot
         leftBack.setDirection(DcMotor.Direction.REVERSE);
         //lifter = hwMap.get(Dc.Motor.class, "lifter");
 
+        motors[0] = leftDrive;
+        motors[1] = rightDrive;
+        motors[2] = leftBack;
+        motors[3] = rightBack;
 
         // Set all motors to zero power
         leftDrive.setPower(0);
@@ -76,10 +63,10 @@ public class HardwareK9bot
 
         // Set all motors to run without encoders.
         // May want to use RUN_USING_ENCODERS if encoders are installed.
-        leftDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        rightDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        leftBack.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        rightBack.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        for(DcMotor motor : motors){
+            motor.setPower(0);
+            motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        }
 
         // Define and initialize ALL installed servos.
         /*
