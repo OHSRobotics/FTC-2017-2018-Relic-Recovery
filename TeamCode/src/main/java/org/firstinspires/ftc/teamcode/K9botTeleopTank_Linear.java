@@ -9,7 +9,7 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 import org.firstinspires.ftc.teamcode.HardwareK9bot;
 
 @TeleOp(name="K9bot: Telop Tank", group="K9bot")
-public class K9botTeleopTank_Linear extends BaseOpMode {
+public class K9botTeleopTank_Linear extends OpModeBase {
 
     /* Declare OpMode members. */
     HardwareK9bot   robot           = new HardwareK9bot();              // Use a K9'shardware
