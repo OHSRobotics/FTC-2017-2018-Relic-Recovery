@@ -116,5 +116,13 @@ public class MovementHelper{
         }
     }
 
+    public void goForward(double speed, double targetDistance){
+        int target = map.rightBack.getCurrentPosition() + (int)(targetDistance * AutonomousTest.COUNTS_PER_INCH);
+        for(DcMotor motor : map.motors){
+            motor.setTargetPosition(target);
+            motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            motor.setPower(speed);
+        }
+    }
 
 }
