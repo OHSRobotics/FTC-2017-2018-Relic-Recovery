@@ -48,7 +48,7 @@ import java.util.List;
 
 
 @Autonomous(name="Test Autonomous", group="K9bot")
-public class AutonomousTest extends LinearOpMode {
+public class AutonomousTest extends AutonomousBase {
 
     private HardwareK9bot   robot           = new HardwareK9bot();   // Use a Pushbot's hardware
     private ElapsedTime     runtime = new ElapsedTime();
