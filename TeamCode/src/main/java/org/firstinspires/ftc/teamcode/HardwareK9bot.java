@@ -32,6 +32,7 @@ public class HardwareK9bot
     public DcMotor  leftDrive   = null;
     public DcMotor  rightDrive  = null;
     public DcMotor shaftController = null;
+    public DcMotor[] motors = new DcMotor[4];
 
     HardwareMap hwMap  = null;
     private ElapsedTime period  = new ElapsedTime();
@@ -56,21 +57,16 @@ public class HardwareK9bot
         leftBack.setDirection(DcMotor.Direction.REVERSE);
         //lifter = hwMap.get(Dc.Motor.class, "lifter");
 
+        motors[0] = rightDrive;
+        motors[1] = leftDrive;
+        motors[2] = leftBack;
+        motors[3] = rightBack;
 
-        // Set all motors to zero power
-        leftDrive.setPower(0);
-        rightDrive.setPower(0);
-        leftBack.setPower(0);
-        rightBack.setPower(0);
+        for(DcMotor motor : motors){
+            motor.setPower(0);
+            motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        }
         shaftController.setPower(0);
-
-
-        // Set all motors to run without encoders.
-        // May want to use RUN_USING_ENCODERS if encoders are installed.
-        leftDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        rightDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        leftBack.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        rightBack.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         shaftController.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         // Define and initialize ALL installed servos.
