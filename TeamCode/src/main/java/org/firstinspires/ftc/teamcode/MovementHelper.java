@@ -38,11 +38,11 @@ public class MovementHelper{
     }
 
     public void goRight(double speed, double distance, double timeoutS){
-        goSideways(speed, distance, timeoutS);
+        goSideways(speed, distance);
     }
 
     public void goLeft(double speed, double distance, double timeoutS){
-        goSideways(speed, -distance, timeoutS);
+        goSideways(speed, -distance);
     }
 
     public void rotateCounterClockWise(double degrees, double speed) {
@@ -72,7 +72,7 @@ public class MovementHelper{
     }
 
 
-    public void goSideways(double speed, double targetDistance, double timeoutS){
+    public void goSideways(double speed, double targetDistance){
         if(red)
             targetDistance = -targetDistance;
 
@@ -89,8 +89,6 @@ public class MovementHelper{
             map.leftBack.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             map.rightDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             map.rightBack.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-            opMode.getElapsedTime().reset();
             if (inwardTarget > 0){
                 map.leftBack.setPower(speed);
                 map.rightDrive.setPower(speed);
@@ -102,17 +100,6 @@ public class MovementHelper{
                 map.leftDrive.setPower(speed);
                 map.rightBack.setPower(speed);
             }
-            /*
-            while (opModeIsActive() &&
-                    (runtime.seconds() < timeoutS) &&
-                    (robot.leftDrive.isBusy() && robot.rightBack.isBusy() && robot.rightDrive.isBusy() && robot.leftBack.isBusy())){
-                telemetry.addData("Path1",  "Running to %7d :%7d", inwardTarget);
-                telemetry.addData("Path2",  "Running at %7d :%7d",
-                        robot.leftDrive.getCurrentPosition(),
-                        robot.rightDrive.getCurrentPosition());
-                telemetry.update();
-            }
-            */
         }
     }
 
