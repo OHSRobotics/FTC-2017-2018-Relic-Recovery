@@ -31,20 +31,8 @@ public class HardwareK9bot
     public DcMotor rightBack = null;
     public DcMotor  leftDrive   = null;
     public DcMotor  rightDrive  = null;
-    /*
-    public DcMotor    lifter = null;
-    public Servo     armR = null;
-    public Servo  armL = null;
-	*/
-    /*
-    public final static double ARM_HOME = 0.2;
-    public final static double CLAW_HOME = 0.2;
-    public final static double ARM_MIN_RANGE  = 0.20;
-    public final static double ARM_MAX_RANGE  = 0.90;
-    public final static double CLAW_MIN_RANGE  = 0.20;
-    public final static double CLAW_MAX_RANGE  = 0.7;
-    */
-    /* Local OpMode members. */
+    public DcMotor shaftController = null;
+
     HardwareMap hwMap  = null;
     private ElapsedTime period  = new ElapsedTime();
 
@@ -62,6 +50,8 @@ public class HardwareK9bot
         rightDrive = hwMap.get(DcMotor.class, "right_drive");
         leftBack = hwMap.get(DcMotor.class, "left_back");
         rightBack = hwMap.get(DcMotor.class, "right_back");
+        shaftController = hwMap.get(DcMotor.class, "shaft_controller");
+
         leftDrive.setDirection(DcMotor.Direction.REVERSE);
         leftBack.setDirection(DcMotor.Direction.REVERSE);
         //lifter = hwMap.get(Dc.Motor.class, "lifter");
@@ -72,6 +62,7 @@ public class HardwareK9bot
         rightDrive.setPower(0);
         leftBack.setPower(0);
         rightBack.setPower(0);
+        shaftController.setPower(0);
 
 
         // Set all motors to run without encoders.
@@ -80,6 +71,7 @@ public class HardwareK9bot
         rightDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         leftBack.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         rightBack.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        shaftController.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         // Define and initialize ALL installed servos.
         /*
