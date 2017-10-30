@@ -68,6 +68,7 @@ public class MovementHelper{
 
         for(DcMotor motor : map.motors){
             motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            motor.setPower(speed);
         }
     }
 

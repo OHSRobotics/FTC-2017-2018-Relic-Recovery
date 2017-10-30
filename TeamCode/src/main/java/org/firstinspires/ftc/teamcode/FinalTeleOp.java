@@ -1,12 +1,19 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.util.Range;
+import com.qualcomm.robotcore.hardware.Gamepad;
+import org.firstinspires.ftc.teamcode.HardwareK9bot;
 
 /**
  * Created by Troy Neubauer on 10/28/2017.
  */
 
-public class TeleOp extends OpModeBase {
+@TeleOp(name="Telop Working", group="K9bot")
+public class FinalTeleOp extends OpModeBase {
     HardwareK9bot   robot           = new HardwareK9bot();
 
     @Override

@@ -47,7 +47,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-@Autonomous(name="Test Autonomous", group="K9bot")
+@Autonomous(name="Autonomous Program Mode", group="K9bot")
 public class AutonomousTest extends AutonomousBase {
 
     private HardwareK9bot   robot           = new HardwareK9bot();   // Use a Pushbot's hardware
