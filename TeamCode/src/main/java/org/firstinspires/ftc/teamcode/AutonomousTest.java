@@ -131,7 +131,7 @@ public class AutonomousTest extends AutonomousBase {
         }
         telemetry.addData("VuMark", "%s visible", vuMark);
     }
-    public void goSideways(double speed, double targetDistance, double timeoutS){
+    public void goSideways(double speed, double targetDistance){
         int inwardTarget, outwardTarget;
         if (opModeIsActive()){
             inwardTarget = robot.rightBack.getCurrentPosition() + (int)(targetDistance * COUNTS_PER_INCH * SQRT_2);
@@ -171,7 +171,7 @@ public class AutonomousTest extends AutonomousBase {
             */
         }
     }
-    public void drive(double speed, double targetDistance, double timeoutS){
+    public void drive(double speed, double targetDistance){
         int target;
         if (opModeIsActive()) {
             target = robot.leftDrive.getCurrentPosition() + (int)(targetDistance * COUNTS_PER_INCH);

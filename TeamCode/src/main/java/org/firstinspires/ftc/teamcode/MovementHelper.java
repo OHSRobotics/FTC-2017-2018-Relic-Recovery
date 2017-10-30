@@ -37,11 +37,11 @@ public class MovementHelper{
         this.opMode = opMode;
     }
 
-    public void goRight(double speed, double distance, double timeoutS){
+    public void goRight(double speed, double distance){
         goSideways(speed, distance);
     }
 
-    public void goLeft(double speed, double distance, double timeoutS){
+    public void goLeft(double speed, double distance){
         goSideways(speed, -distance);
     }
 

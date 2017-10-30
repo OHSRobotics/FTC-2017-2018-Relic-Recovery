@@ -39,6 +39,8 @@ public class FinalTeleOp extends OpModeBase {
             double lateral = gamepad1.right_stick_x;
             double forward = -gamepad1.right_stick_y;
 
+
+
             double leftDrive, leftBack, rightDrive, rightBack;
 
             leftDrive = forward + lateral + turn;
@@ -57,6 +59,20 @@ public class FinalTeleOp extends OpModeBase {
             robot.leftBack.setPower(leftBack);
             robot.rightDrive.setPower(rightDrive);
             robot.rightBack.setPower(rightBack);
+
+            if(gamepad1.a){
+                robot.grabber.setPosition(.5);
+            } else if (gamepad1.b){
+                robot.grabber.setPosition(1);
+            }
+
+            if(gamepad1.right_bumper) {
+                robot.tail.setPosition(0);
+            } else if (gamepad1.left_bumper) {
+                robot.tail.setPosition(1);
+            } else {
+                robot.tail.setPosition(.5);
+            }
             telemetry.addData("lateral",  "%.2f", lateral);
             telemetry.addData("forward", "%.2f", forward);
             telemetry.update();
