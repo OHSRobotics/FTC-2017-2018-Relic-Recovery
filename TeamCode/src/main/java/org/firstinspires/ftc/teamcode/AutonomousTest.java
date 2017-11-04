@@ -28,12 +28,20 @@
  */
 
 package org.firstinspires.ftc.teamcode;
+import android.app.Activity;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.ImageFormat;
+import android.hardware.Camera;
+import android.provider.MediaStore;
+
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.Range;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.robotcontroller.external.samples.ConceptVuforiaNavigation;
+import org.firstinspires.ftc.robotcontroller.internal.FtcRobotControllerActivity;
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
 import org.firstinspires.ftc.robotcore.external.navigation.VuMarkInstanceId;
@@ -42,12 +50,13 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 
+import org.firstinspires.ftc.robotcore.internal.system.AppUtil;
 import org.firstinspires.ftc.teamcode.HardwareK9bot;
 import java.util.ArrayList;
 import java.util.List;
 
 
-@Autonomous(name="Test Autonomous", group="K9bot")
+@Autonomous(name="Autonomous Program Mode", group="K9bot")
 public class AutonomousTest extends AutonomousBase {
 
     private HardwareK9bot   robot           = new HardwareK9bot();   // Use a Pushbot's hardware
@@ -56,8 +65,7 @@ public class AutonomousTest extends AutonomousBase {
     protected static final double     COUNTS_PER_MOTOR_REV    = 1440 ;    // eg: TETRIX Motor Encoder
     protected static final double     DRIVE_GEAR_REDUCTION    = 2.0 ;     // This is < 1.0 if geared UP
     protected static final double     WHEEL_DIAMETER_INCHES   = 4.0 ;     // For figuring circumference
-    protected static final double     COUNTS_PER_INCH         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
-            (WHEEL_DIAMETER_INCHES * 3.1415);
+    protected static final double     COUNTS_PER_INCH         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) / (WHEEL_DIAMETER_INCHES * 3.1415);
     protected static final double     DRIVE_SPEED             = 0.6;
     protected static final double     TURN_SPEED              = 0.5;
     protected static RelicRecoveryVuMark vuMark;
@@ -93,7 +101,7 @@ public class AutonomousTest extends AutonomousBase {
         telemetry.update();
 
         // Wait for the game to start (driver presses PLAY)
-        waitForStart();
+
         /*
         // Step through each leg of the path,
         // Note: Reverse movement is obtained by setting a negative distance (not speed)
@@ -101,9 +109,45 @@ public class AutonomousTest extends AutonomousBase {
         encoderDrive(TURN_SPEED,   12, -12, 4.0);  // S2: Turn Right 12 Inches with 4 Sec timeout
         encoderDrive(DRIVE_SPEED, -24, -24, 4.0);  // S3: Reverse 24 Inches with 4 Sec timeout
         */
-        getVuMark();
+        //getVuMark();
         telemetry.addData("Path", "Complete");
+
+        takePicture();
         telemetry.update();
+        try {
+            Thread.sleep(5000);
+        } catch(Exception e) {
+
+        }
+        waitForStart();
+    }
+
+    private void takePicture() {
+        Camera.open().takePicture(null, new Camera.PictureCallback() {
+            @Override
+            public void onPictureTaken(byte[] data, Camera camera) {
+                int bpp = ImageFormat.getBitsPerPixel(camera.getParameters().getPictureFormat());
+                if(bpp != 24) {
+                    telemetry.addData("We're screwed! Not 24 bpp", Integer.valueOf(bpp));
+                } else {
+                    telemetry.addData("Good bpp", "");
+                }
+            }
+        }, null);
+        final int REQUEST_IMAGE_CAPTURE = 1;
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        if (takePictureIntent.resolveActivity(hardwareMap.appContext.getPackageManager()) != null) {
+            AppUtil.getInstance().getActivity().startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+        }
+        while(FtcRobotControllerActivity.bitmap == null) {
+            try {
+                telemetry.addData("Waiting for picture to be taken", null);
+                Thread.sleep(100);
+            } catch(Exception e) {
+            }
+        }
+        telemetry.addData("Width " + FtcRobotControllerActivity.bitmap.getWidth(), null);
+        telemetry.addData("Height " + FtcRobotControllerActivity.bitmap.getHeight(), null);
     }
 
     /*
@@ -115,7 +159,7 @@ public class AutonomousTest extends AutonomousBase {
      *  3) Driver stops the opmode running.
      */
     VuforiaLocalizer vuforia;
-    public void getVuMark(){
+    public void getVuMark() {
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
         parameters.vuforiaLicenseKey = "AVopUEP/////AAAAGWa6aLJRdEtZt4aOLr0I7ccF3KzNPNBTy+OBLJgM9NQYaJO8oMs2D+AYRl8btGOYhTX2/RLw7aPkSAshIAXVGzqJX9oHKdv0+P9iK4j516iEiuYROYb006Wl/WnluQ6gXpntcnLGxRt8ZhXU7xI2F7unR9CCIjRT2flUoMjM0EnJyRCwmU4m2v7gSdD3v+W4dhMrbO7jsJrHcoYsRExNfFoolV98sokj+p1aDfXTL73gnWaDaMatrwCBsAka8fsWYkEWSPwml3Uxlzym1C3T1rL5bEtIbD+LveBYDv1djxvNLfVbVVTn0b7Zoh4L5kFXDz5pbIDkui+m4j5cu9Y7N2zbSfEA0DP0ZLvLbTYHDxkn";
@@ -129,6 +173,7 @@ public class AutonomousTest extends AutonomousBase {
             if (vuMark != RelicRecoveryVuMark.UNKNOWN)
                 break;
         }
+
         telemetry.addData("VuMark", "%s visible", vuMark);
     }
     public void goSideways(double speed, double targetDistance, double timeoutS){

@@ -40,6 +40,7 @@ import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.content.res.Resources;
+import android.graphics.Bitmap;
 import android.hardware.usb.UsbDevice;
 import android.hardware.usb.UsbManager;
 import android.net.wifi.WifiManager;
@@ -119,6 +120,7 @@ public class FtcRobotControllerActivity extends Activity
   public String getTag() { return TAG; }
 
   private static final int REQUEST_CONFIG_WIFI_CHANNEL = 1;
+  private static final int REQUEST_IMAGE_CAPTURE = 10;
   private static final int NUM_GAMEPADS = 2;
 
   protected WifiManager.WifiLock wifiLock;
@@ -153,6 +155,7 @@ public class FtcRobotControllerActivity extends Activity
 
   protected FtcEventLoop eventLoop;
   protected Queue<UsbDevice> receivedUsbAttachmentNotifications;
+  public static volatile Bitmap bitmap = null;
 
   protected class RobotRestarter implements Restarter {
 
@@ -527,6 +530,10 @@ public class FtcRobotControllerActivity extends Activity
     if (request == RequestCode.CONFIGURE_ROBOT_CONTROLLER.ordinal() || request == RequestCode.SETTINGS_ROBOT_CONTROLLER.ordinal()) {
       // We always do a refresh, whether it was a cancel or an OK, for robustness
       cfgFileMgr.getActiveConfigAndUpdateUI();
+    }
+    if (request == REQUEST_IMAGE_CAPTURE && result == RESULT_OK) {
+      Bundle extras = intent.getExtras();
+      FtcRobotControllerActivity.bitmap = (Bitmap) extras.get("data");
     }
   }
 

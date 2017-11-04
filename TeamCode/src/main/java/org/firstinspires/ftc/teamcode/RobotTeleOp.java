@@ -6,7 +6,8 @@ import com.qualcomm.robotcore.hardware.DcMotor;
  * Created by Troy Neubauer on 10/28/2017.
  */
 
-public class TeleOp extends OpModeBase {
+@com.qualcomm.robotcore.eventloop.opmode.TeleOp(name = "TeleOP", group = "K9Bot")
+public class RobotTeleOp extends OpModeBase {
     HardwareK9bot   robot           = new HardwareK9bot();
 
     @Override
