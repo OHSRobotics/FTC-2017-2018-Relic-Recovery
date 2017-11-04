@@ -26,9 +26,6 @@ public class FinalTeleOp extends OpModeBase {
         robot.leftBack.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         robot.rightBack.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
-        // Send telemetry message to signify robot waiting;
-        telemetry.addData("Say", "haha justin is an idi0t");    //
-        telemetry.update();
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
@@ -47,6 +44,25 @@ public class FinalTeleOp extends OpModeBase {
             leftBack = forward - lateral +  turn;
             rightDrive = forward - lateral - turn;
             rightBack = forward + lateral - turn;
+
+            if(forward > .1){
+                if(lateral > .1) {
+                    lateral = .707;
+                    forward = .707;
+                } else if(lateral < -.1){
+                    lateral = -.707;
+                    forward = .707;
+                }
+            } else if (forward < -.1) {
+                if(lateral > .1) {
+                    lateral = .707;
+                    forward = -.707;
+                } else if(lateral < -.1){
+                    lateral = -.707;
+                    forward = -.707;
+                }
+            }
+
             if(gamepad1.x) {
                 leftDrive /= 2.0;
                 leftBack /= 2.0;
@@ -73,6 +89,8 @@ public class FinalTeleOp extends OpModeBase {
             } else {
                 robot.tail.setPosition(.5);
             }
+            telemetry.addData("tail position", "%.2f", robot.tail.getPosition());
+            telemetry.addData("grabber position","%.2f", robot.grabber.getPosition());
             telemetry.addData("lateral",  "%.2f", lateral);
             telemetry.addData("forward", "%.2f", forward);
             telemetry.update();
