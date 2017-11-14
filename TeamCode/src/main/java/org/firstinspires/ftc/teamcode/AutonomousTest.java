@@ -58,10 +58,9 @@ public class AutonomousTest extends AutonomousBase {
     protected static final double     WHEEL_DIAMETER_INCHES   = 4.0 ;     // For figuring circumference
     protected static final double     COUNTS_PER_INCH         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
             (WHEEL_DIAMETER_INCHES * 3.1415);
-    protected static final double     DRIVE_SPEED             = 0.6;
-    protected static final double     TURN_SPEED              = 0.5;
     protected static RelicRecoveryVuMark vuMark;
     public static final double SQRT_2 = Math.sqrt(2.0);
+
 
     @Override
     public void runOpMode() {

@@ -14,7 +14,8 @@ public class HardwareK9bot
     public DcMotor  rightDrive  = null;
     public DcMotor shaftController = null;
     public DcMotor[] motors = new DcMotor[4];
-    public Servo grabber = null;
+    public Servo grabberL = null;
+    public Servo grabberR = null;
     public Servo tail = null;
 
     HardwareMap hwMap  = null;
@@ -30,7 +31,8 @@ public class HardwareK9bot
         leftBack = hwMap.get(DcMotor.class, "left_back");
         rightBack = hwMap.get(DcMotor.class, "right_back");
         shaftController = hwMap.get(DcMotor.class, "shaft_controller");
-        grabber = hwMap.get(Servo.class, "grip");
+        grabberR = hwMap.get(Servo.class, "gripR");
+        grabberL = hwMap.get(Servo.class, "gripL");
         tail = hwMap.get(Servo.class, "tail");
 
         leftDrive.setDirection(DcMotor.Direction.REVERSE);

@@ -29,7 +29,7 @@ public class MovementHelper{
 
     private HardwareK9bot map;
     private AutonomousTest opMode;
-    private double circumference = Math.random();
+    private double circumference = 40.82;
 
     public MovementHelper(boolean red, HardwareK9bot map, AutonomousTest opMode) {
         this.red = red;

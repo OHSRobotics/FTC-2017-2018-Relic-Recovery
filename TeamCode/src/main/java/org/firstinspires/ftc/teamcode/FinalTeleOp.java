@@ -32,18 +32,13 @@ public class FinalTeleOp extends OpModeBase {
 
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
-            double turn = gamepad1.left_stick_x;
-            double lateral = gamepad1.right_stick_x;
-            double forward = -gamepad1.right_stick_y;
+            double turn = gamepad1.right_stick_x;
+            double lateral = gamepad1.left_stick_x;
+            double forward = -gamepad1.left_stick_y;
 
 
 
             double leftDrive, leftBack, rightDrive, rightBack;
-
-            leftDrive = forward + lateral + turn;
-            leftBack = forward - lateral +  turn;
-            rightDrive = forward - lateral - turn;
-            rightBack = forward + lateral - turn;
 
             if(forward > .1){
                 if(lateral > .1) {
@@ -63,6 +58,12 @@ public class FinalTeleOp extends OpModeBase {
                 }
             }
 
+            leftDrive = forward + lateral + turn;
+            leftBack = forward - lateral +  turn;
+            rightDrive = forward - lateral - turn;
+            rightBack = forward + lateral - turn;
+
+
             if(gamepad1.x) {
                 leftDrive /= 2.0;
                 leftBack /= 2.0;
@@ -77,20 +78,15 @@ public class FinalTeleOp extends OpModeBase {
             robot.rightBack.setPower(rightBack);
 
             if(gamepad1.a){
-                robot.grabber.setPosition(.5);
+                robot.grabberR.setPosition(.75);
+                robot.grabberL.setPosition(.15);
             } else if (gamepad1.b){
-                robot.grabber.setPosition(1);
+                robot.grabberR.setPosition(.6);
+                robot.grabberL.setPosition(.33);
             }
 
-            if(gamepad1.right_bumper) {
-                robot.tail.setPosition(0);
-            } else if (gamepad1.left_bumper) {
-                robot.tail.setPosition(1);
-            } else {
-                robot.tail.setPosition(.5);
-            }
             telemetry.addData("tail position", "%.2f", robot.tail.getPosition());
-            telemetry.addData("grabber position","%.2f", robot.grabber.getPosition());
+            telemetry.addData("grabber position","%.2f", robot.grabberR.getPosition());
             telemetry.addData("lateral",  "%.2f", lateral);
             telemetry.addData("forward", "%.2f", forward);
             telemetry.update();
