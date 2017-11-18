@@ -13,8 +13,20 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 @Autonomous(name="Right Autonomous", group="K9bot")
 public class RightAutonomous extends AutonomousBase {
 
-    @Override
+    public RightAutonomous() {
+        super(true);
+    }
+
+    @Override// Sudo code by Justin Kim
     public void runOpMode() throws InterruptedException {
+        getVuMark();
+        waitForStart();
+        //extend tail
+        helper.drive(1.0, -12.0, 2);
+        //detect juel
+        //hit jwel
+        helper.drive(1.0, 12.0, 2);
+        helper.rotate(180, 1.0, 3, 1.0);
 
     }
 }

@@ -71,6 +71,10 @@ public class AutonomousTest extends AutonomousBase {
     protected static RelicRecoveryVuMark vuMark;
     public static final double SQRT_2 = Math.sqrt(2.0);
 
+    public AutonomousTest() {
+        super(false);
+    }
+
     @Override
     public void runOpMode() {
 
