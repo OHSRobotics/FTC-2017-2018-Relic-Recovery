@@ -49,6 +49,24 @@ public class K9botTeleopTank_Linear extends OpModeBase {
             double lateral = gamepad1.right_stick_x;
             double forward = -gamepad1.right_stick_y;
 
+            if(forward > .1){
+                if(lateral > .1) {
+                    lateral = .707;
+                    forward = .707;
+                } else if(lateral < -.1){
+                    lateral = -.707;
+                    forward = .707;
+                }
+            } else if (forward < -.1) {
+                if(lateral > .1) {
+                    lateral = .707;
+                    forward = -.707;
+                } else if(lateral < -.1){
+                    lateral = -.707;
+                    forward = -.707;
+                }
+            }
+
             robot.leftDrive.setPower(forward + lateral + turn);
             robot.leftBack.setPower(forward - lateral +  turn);
             robot.rightDrive.setPower(forward - lateral - turn);

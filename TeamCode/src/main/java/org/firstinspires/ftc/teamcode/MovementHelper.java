@@ -29,7 +29,7 @@ public class MovementHelper{
 
     private HardwareK9bot map;
     private AutonomousTest opMode;
-    private double circumference = Math.random();
+    private double circumference = 40.82;
 
     public MovementHelper(boolean red, HardwareK9bot map, AutonomousTest opMode) {
         this.red = red;
@@ -37,11 +37,11 @@ public class MovementHelper{
         this.opMode = opMode;
     }
 
-    public void goRight(double speed, double distance, double timeoutS){
+    public void goRight(double speed, double distance){
         goSideways(speed, distance);
     }
 
-    public void goLeft(double speed, double distance, double timeoutS){
+    public void goLeft(double speed, double distance){
         goSideways(speed, -distance);
     }
 
@@ -68,6 +68,7 @@ public class MovementHelper{
 
         for(DcMotor motor : map.motors){
             motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            motor.setPower(speed);
         }
     }
 
