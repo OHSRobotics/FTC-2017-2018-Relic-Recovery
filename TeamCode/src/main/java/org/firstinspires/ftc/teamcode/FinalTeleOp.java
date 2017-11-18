@@ -68,6 +68,10 @@ public class FinalTeleOp extends OpModeBase {
                 robot.grabberR.setPosition(1.25);
             }
 
+            if(gamepad1.y){ //Y is rotate 90 degrees
+
+            }
+
             if(gamepad1.right_bumper) {
                 robot.tail.setPosition(0);
             } else if (gamepad1.left_bumper) {
