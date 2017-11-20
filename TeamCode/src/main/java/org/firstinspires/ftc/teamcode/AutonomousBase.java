@@ -28,14 +28,22 @@ public abstract class AutonomousBase extends OpModeBase {
         this.helper = new MovementHelper(red, robot, this);
     }
 
+    @Override
+    public void runOpMode() throws InterruptedException {
+        robot.init(hardwareMap);
+        runOpModeImpl();
+    }
+
+    public abstract void runOpModeImpl();
+
     /*
-     *  Method to perfmorm a relative move, based on encoder counts.
-     *  Encoders are not reset as the move is based on the current position.
-     *  Move will stop if any of three conditions occur:
-     *  1) Move gets to the desired position
-     *  2) Move runs out of time
-     *  3) Driver stops the opmode running.
-     */
+         *  Method to perfmorm a relative move, based on encoder counts.
+         *  Encoders are not reset as the move is based on the current position.
+         *  Move will stop if any of three conditions occur:
+         *  1) Move gets to the desired position
+         *  2) Move runs out of time
+         *  3) Driver stops the opmode running.
+         */
     VuforiaLocalizer vuforia;
     public void getVuMark() {
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());

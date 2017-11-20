@@ -156,19 +156,23 @@ public class MovementHelper{
     }
 
     public void rotate(double speed, double degrees, double timout, double tolerance) {
-        double targetHeading = robot.gyro.getHeading() + degrees;
+        /*double targetHeading = robot.gyro.getHeading() + degrees;
         targetHeading %= 360.0;
         while(opMode.opModeIsActive() && (Math.abs(robot.gyro.getHeading()) - targetHeading) < tolerance) {
             robot.leftDrive.setPower(-speed);
             robot.leftBack.setPower(-speed);
             robot.rightDrive.setPower(speed);
             robot.rightBack.setPower(speed);
-        }
+        }*/
     }
 
     public void drive(double speed, double targetDistance, double timeoutS){
         int target;
         runtime.reset();
+        opMode.telemetry.addData("test from drive!", "");
+        opMode.telemetry.addData("is active", "");
+        opMode.telemetry.addData("time", "");
+        opMode.telemetry.update();
         if (opMode.opModeIsActive() && (runtime.seconds() < timeoutS)) {
             target = robot.leftDrive.getCurrentPosition() + (int)(targetDistance * COUNTS_PER_INCH);
             robot.leftDrive.setTargetPosition(target);
@@ -181,9 +185,12 @@ public class MovementHelper{
             robot.leftDrive.setPower(speed);
             robot.rightBack.setPower(speed);
             robot.rightDrive.setPower(speed);
+            opMode.telemetry.update();
         }
         while (opMode.opModeIsActive() && (runtime.seconds() < timeoutS) &&
                 (robot.leftDrive.isBusy() && robot.rightBack.isBusy() && robot.rightDrive.isBusy() && robot.leftBack.isBusy())){
+            opMode.telemetry.addData("test loop", "");
+            opMode.telemetry.update();
                 /*telemetry.addData("Path1",  "Running to %7d :%7d", inwardTarget);
                 telemetry.addData("Path2",  "Running at %7d :%7d",
                         robot.leftDrive.getCurrentPosition(),

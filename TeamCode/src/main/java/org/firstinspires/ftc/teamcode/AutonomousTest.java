@@ -76,13 +76,7 @@ public class AutonomousTest extends AutonomousBase {
     }
 
     @Override
-    public void runOpMode() {
-
-        /*
-         * Initialize the drive system variables.
-         * The init() method of the hardware class does all the work here
-         */
-        robot.init(hardwareMap);
+    public void runOpModeImpl() {
 
         // Send telemetry message to signify robot waiting;
         telemetry.addData("Status", "Resetting Encoders");    //

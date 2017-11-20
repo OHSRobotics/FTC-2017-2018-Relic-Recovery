@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
+import android.opengl.GLES10;
+
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cGyro;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -36,7 +38,7 @@ public class HardwareK9bot
     public DcMotor[] motors = new DcMotor[4];
     public Servo grabberL = null, grabberR = null;
     public Servo tail = null;
-    public ModernRoboticsI2cGyro gyro;
+    //public ModernRoboticsI2cGyro gyro;
 
     HardwareMap hwMap  = null;
     private ElapsedTime period  = new ElapsedTime();
@@ -57,7 +59,7 @@ public class HardwareK9bot
         grabberL = hwMap.get(Servo.class, "gripL");
         grabberR = hwMap.get(Servo.class, "gripR");
         tail = hwMap.get(Servo.class, "tail");
-        gyro = hwMap.get(ModernRoboticsI2cGyro.class, "gyro");
+        //gyro = hwMap.get(ModernRoboticsI2cGyro.class, "gyro");
 
         leftDrive.setDirection(DcMotor.Direction.REVERSE);
         leftBack.setDirection(DcMotor.Direction.REVERSE);

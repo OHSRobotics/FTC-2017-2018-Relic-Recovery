@@ -18,7 +18,7 @@ public class RightAutonomous extends AutonomousBase {
     }
 
     @Override// Sudo code by Justin Kim
-    public void runOpMode() throws InterruptedException {
+    public void runOpModeImpl() {
         getVuMark();
         waitForStart();
         //extend tail

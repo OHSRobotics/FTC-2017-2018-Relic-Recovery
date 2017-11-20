@@ -12,15 +12,21 @@ public class LeftAutonomous extends AutonomousBase {
     }
 
     @Override
-    public void runOpMode() throws InterruptedException {
-        getVuMark();
-        waitForStart();
+    public void runOpModeImpl() {
+        telemetry.addData("Starting opmode!", "");
+        telemetry.update();
+        //getVuMark();
+        //waitForStart();
         //extend tail
         helper.drive(1.0, -12.0, 2);
+        telemetry.addData("done driving", "");
+        telemetry.update();
         //detect jewel, detect vumark
         //hit jewel
         helper.drive(1.0, 12.0, 2);
-        helper.rotate(90, 1.0, 1.5, 1.0);
+        //helper.rotate(90, 1.0, 1.5, 1.0);
+        telemetry.addData("done rotation", "");
+        telemetry.update();
         if (vuMark == RelicRecoveryVuMark.RIGHT){
             helper.goSideways(1.0, -8.0, 3);
         }
