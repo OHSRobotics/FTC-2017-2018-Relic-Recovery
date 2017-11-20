@@ -8,6 +8,10 @@ import com.qualcomm.robotcore.util.Range;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import org.firstinspires.ftc.teamcode.HardwareK9bot;
 
+/**
+ * Created by Troy Neubauer on 10/28/2017.
+ */
+
 @TeleOp(name="Telop Final", group="K9bot")
 public class FinalTeleOp extends OpModeBase {
     HardwareK9bot   robot           = new HardwareK9bot();
@@ -42,7 +46,7 @@ public class FinalTeleOp extends OpModeBase {
             leftBack = forward - lateral +  turn;
             rightDrive = forward - lateral - turn;
             rightBack = forward + lateral - turn;
-            if(getGamepad(1).x) {
+            if(getGamepad(1).left_stick_button) {
                 leftDrive /= 2.0;
                 leftBack /= 2.0;
                 rightDrive /= 2.0;
@@ -55,11 +59,11 @@ public class FinalTeleOp extends OpModeBase {
             robot.rightBack.setPower(rightBack);
 
             if(getGamepad(2).a){//A is grab
-                robot.grabberL.setPosition(.25);
-                robot.grabberR.setPosition(1);
+                robot.grabberL.setPosition(.8);
+                robot.grabberR.setPosition(.5);
             } else if (getGamepad(2).b){//B is release
-                robot.grabberL.setPosition(0);
-                robot.grabberR.setPosition(1.25);
+                robot.grabberL.setPosition(.45);
+                robot.grabberR.setPosition(.9);
             }
 
             if(getGamepad(2).right_bumper) {
