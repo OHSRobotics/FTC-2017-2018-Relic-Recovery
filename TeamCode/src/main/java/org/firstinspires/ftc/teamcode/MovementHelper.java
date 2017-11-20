@@ -170,22 +170,27 @@ public class MovementHelper{
         int target;
         runtime.reset();
         opMode.telemetry.addData("test from drive!", "");
-        opMode.telemetry.addData("is active", "");
-        opMode.telemetry.addData("time", "");
+        opMode.telemetry.addData("is active", opMode.opModeIsActive());
+        opMode.telemetry.addData("time", (runtime.seconds() < timeoutS));
         opMode.telemetry.update();
-        if (opMode.opModeIsActive() && (runtime.seconds() < timeoutS)) {
+        if (opMode.opModeIsActive()) {
             target = robot.leftDrive.getCurrentPosition() + (int)(targetDistance * COUNTS_PER_INCH);
             robot.leftDrive.setTargetPosition(target);
             robot.leftBack.setTargetPosition(target);
             robot.rightBack.setTargetPosition(target);
             robot.rightDrive.setTargetPosition(target);
 
-            runtime.reset();
             robot.leftBack.setPower(speed);
             robot.leftDrive.setPower(speed);
             robot.rightBack.setPower(speed);
             robot.rightDrive.setPower(speed);
+            
             opMode.telemetry.update();
+            try {
+                opMode.waitOneFullHardwareCycle();
+            } catch(Exception e) {
+
+            }
         }
         while (opMode.opModeIsActive() && (runtime.seconds() < timeoutS) &&
                 (robot.leftDrive.isBusy() && robot.rightBack.isBusy() && robot.rightDrive.isBusy() && robot.leftBack.isBusy())){
@@ -196,6 +201,7 @@ public class MovementHelper{
                         robot.leftDrive.getCurrentPosition(),
                         robot.rightDrive.getCurrentPosition());*/
             opMode.telemetry.update();
+            opMode.idle();
         }
 
     }
