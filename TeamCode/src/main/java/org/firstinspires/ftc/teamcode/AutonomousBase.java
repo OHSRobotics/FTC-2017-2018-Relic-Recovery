@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
+import android.graphics.Bitmap;
+
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -31,6 +33,12 @@ public abstract class AutonomousBase extends OpModeBase {
     @Override
     public void runOpMode() throws InterruptedException {
         robot.init(hardwareMap);
+        telemetry.addData("Starting autonomous!", "");
+        telemetry.update();
+        getVuMark();
+        waitForStart();
+        robot.grabberL.setPosition(.45);
+        robot.grabberR.setPosition(.9);
         runOpModeImpl();
     }
 
@@ -61,6 +69,23 @@ public abstract class AutonomousBase extends OpModeBase {
         }
 
         telemetry.addData("VuMark", "%s visible", vuMark);
+    }
+
+    public boolean hitRight() {
+        Bitmap bitmap = BitmapStealer.STEAL_BITMAP();
+        int width = bitmap.getWidth(), halfWidth = width / 2, height = bitmap.getHeight();
+        int[] left = new int[halfWidth * height];
+        int[] right = new int[halfWidth * height];
+        for(int y = 0; y < height; y++) {
+            for(int x = 0; x < width; x++) {
+                if(x < halfWidth) {
+                    left[(x % halfWidth) + y * halfWidth] = bitmap.getPixel(x, y);
+                } else {
+                    right[(x % halfWidth) + y * halfWidth] = bitmap.getPixel(x, y);
+                }
+            }
+        }
+        return CameraUtil.jewelRed(left, right);
     }
 
 }

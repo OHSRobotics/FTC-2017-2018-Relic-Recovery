@@ -1,22 +1,22 @@
 package org.firstinspires.ftc.teamcode;
 
-/**
- * Created by almal on 11/18/2017.
- */
 
- public class CameraUtil {
+import android.graphics.Color;
+
+public class CameraUtil {
     final static int RED_R = 255;
-    final static int RED_G = 0;
-    final static int RED_B = 0;
+    final static int RED_G = 50;
+    final static int RED_B = 50;
+    final static int tolerance = 50;
 
-    public boolean jewelRed(int[] left, int[] right) {
-        int tolerance = 50, sumLeft = 0, sumRight = 0;
+    public static boolean jewelRed(int[] left, int[] right) {
+        int sumLeft = 0, sumRight = 0;
         for (int i = 0; i < right.length; i++) {
-            if ((Math.abs(RED_R - (right[i] >>> 16) & 0xFF) < tolerance) && (Math.abs(RED_G - (right[i] >>> 8) & 0xFF) < tolerance) && (Math.abs(RED_B - (right[i] >>> 0) & 0xFF) < tolerance))
+            if ((Math.abs(RED_R - Color.red(left[i])) < tolerance) && (Math.abs(RED_G - Color.green(left[i])) < tolerance) && (Math.abs(RED_B - Color.blue(left[i])) < tolerance))
                 sumLeft++;
         }
         for (int i = 0; i < right.length; i++) {
-            if ((Math.abs(RED_R - (left[i] >>> 16) & 0xFF) < tolerance) && (Math.abs(RED_G - (left[i] >>> 8) & 0xFF) < tolerance) && (Math.abs(RED_B - (left[i] >>> 0) & 0xFF) < tolerance))
+            if ((Math.abs(RED_R - Color.red(left[i])) < tolerance) && (Math.abs(RED_G - Color.green(left[i])) < tolerance) && (Math.abs(RED_B - Color.blue(left[i])) < tolerance))
                 sumRight++;
         } //prefers left
         return sumLeft >= sumRight;

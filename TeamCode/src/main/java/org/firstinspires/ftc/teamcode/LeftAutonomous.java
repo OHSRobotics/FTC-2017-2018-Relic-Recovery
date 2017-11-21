@@ -13,10 +13,6 @@ public class LeftAutonomous extends AutonomousBase {
 
     @Override
     public void runOpModeImpl() {
-        telemetry.addData("Starting opmode!", "");
-        telemetry.update();
-        //getVuMark();
-        //waitForStart();
         //extend tail
         helper.drive(1.0, -12.0, 2);
         telemetry.addData("done driving", "");
