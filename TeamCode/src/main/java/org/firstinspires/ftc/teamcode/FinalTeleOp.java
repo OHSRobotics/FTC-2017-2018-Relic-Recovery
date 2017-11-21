@@ -36,9 +36,9 @@ public class FinalTeleOp extends OpModeBase {
 
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
-            double turn = getGamepad(1).left_stick_x;
-            double lateral = getGamepad(1).right_stick_x;
-            double forward = -getGamepad(1).right_stick_y;
+            double turn = getGamepad(1).right_stick_x;
+            double lateral = getGamepad(1).left_stick_x;
+            double forward = -getGamepad(1).left_stick_y;
 
             double leftDrive, leftBack, rightDrive, rightBack;
 
@@ -47,10 +47,10 @@ public class FinalTeleOp extends OpModeBase {
             rightDrive = forward - lateral - turn;
             rightBack = forward + lateral - turn;
             if(getGamepad(1).left_stick_button) {
-                leftDrive /= 2.0;
-                leftBack /= 2.0;
-                rightDrive /= 2.0;
-                rightBack /= 2.0;
+                leftDrive /= 3.0;
+                leftBack /= 3.0;
+                rightDrive /= 3.0;
+                rightBack /= 3.0;
             }
             robot.shaftController.setPower(getGamepad(2).right_trigger - getGamepad(2).left_trigger);
             robot.leftDrive.setPower(leftDrive);
@@ -66,13 +66,6 @@ public class FinalTeleOp extends OpModeBase {
                 robot.grabberR.setPosition(.9);
             }
 
-            if(getGamepad(2).right_bumper) {
-                robot.tail.setPosition(0);
-            } else if (getGamepad(2).left_bumper) {
-                robot.tail.setPosition(1);
-            } else {
-                robot.tail.setPosition(.5);
-            }
             telemetry.update();
 
             // Pause for 40 mS each cycle = update 25 times a second.
