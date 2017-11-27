@@ -16,8 +16,8 @@ public abstract class AutonomousBase extends OpModeBase {
 
     private HardwareK9bot   robot           = new HardwareK9bot();   // Use a Pushbot's hardware
 
-    protected static final double     COUNTS_PER_MOTOR_REV    = 500;    // eg: TETRIX Motor Encoder
-    protected static final double     DRIVE_GEAR_REDUCTION    = 2.0;     // This is < 1.0 if geared UP
+    protected static final double     COUNTS_PER_MOTOR_REV    = 280;    // eg: TETRIX Motor Encoder
+    protected static final double     DRIVE_GEAR_REDUCTION    = 40.0;     // This is < 1.0 if geared UP
     protected static final double     WHEEL_DIAMETER_INCHES   = 4.0;     // For figuring circumference
     protected static final double     COUNTS_PER_INCH         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) / (WHEEL_DIAMETER_INCHES * Math.PI);
     protected static final double     DRIVE_SPEED             = 0.6;

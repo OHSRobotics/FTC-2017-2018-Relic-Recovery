@@ -181,22 +181,15 @@ public class MovementHelper{
         if (opMode.opModeIsActive()) {
             opMode.telemetry.addData("", "op mode active!");
             opMode.telemetry.update();
-            robot.leftDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            robot.leftBack.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            robot.rightDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            robot.rightBack.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
             target = robot.leftDrive.getCurrentPosition() + (int)(targetDistance * COUNTS_PER_INCH);
-            robot.leftDrive.setTargetPosition(target);
-            robot.leftBack.setTargetPosition(target);
-            robot.rightDrive.setTargetPosition(target);
-            robot.rightBack.setTargetPosition(target);
+            for(DcMotor motor : robot.motors){
+                motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                motor.setTargetPosition(target);
+                motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+                motor.setPower(.1);
+            }
 
-
-            robot.leftDrive.setPower(.1);
-            robot.leftBack.setPower(.5);
-            robot.rightDrive.setPower(.1);
-            robot.rightBack.setPower(.5);
 
 
             opMode.telemetry.update();
@@ -221,11 +214,6 @@ public class MovementHelper{
 
             }
         }
-        robot.leftDrive.setPower(0);
-        robot.leftBack.setPower(0);
-        robot.rightDrive.setPower(0);
-        robot.rightBack.setPower(0);
-
     }
 
     public void encoderDrive(double speed,
