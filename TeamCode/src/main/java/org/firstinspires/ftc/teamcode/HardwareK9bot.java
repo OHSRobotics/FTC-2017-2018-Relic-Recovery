@@ -69,10 +69,6 @@ public class HardwareK9bot
         motors[2] = leftBack;
         motors[3] = rightBack;
 
-        for(DcMotor motor : motors){
-            motor.setPower(0);
-            motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        }
         shaftController.setPower(0);
         shaftController.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 

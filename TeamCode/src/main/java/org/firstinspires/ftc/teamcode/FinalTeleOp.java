@@ -21,11 +21,10 @@ public class FinalTeleOp extends OpModeBase {
     public void runOpMode() {
 
         robot.init(hardwareMap);
-
-        robot.leftDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        robot.rightDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        robot.leftBack.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        robot.rightBack.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        for(DcMotor motor :robot.motors){
+            motor.setPower(0);
+            motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        }
 
         // Send telemetry message to signify robot waiting;
         telemetry.addData("Say", "haha justin is an idi0t");    //
@@ -34,6 +33,7 @@ public class FinalTeleOp extends OpModeBase {
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
 
+        boolean slowMode = false;
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
             double turn = getGamepad(1).right_stick_x;
@@ -46,7 +46,15 @@ public class FinalTeleOp extends OpModeBase {
             leftBack = forward - lateral +  turn;
             rightDrive = forward - lateral - turn;
             rightBack = forward + lateral - turn;
-            if(getGamepad(1).left_stick_button) {
+
+
+            if(gamepad1.y)
+                slowMode = true;
+            else if (gamepad1.x)
+                slowMode = false;
+
+
+            if(slowMode) {
                 leftDrive /= 3.0;
                 leftBack /= 3.0;
                 rightDrive /= 3.0;

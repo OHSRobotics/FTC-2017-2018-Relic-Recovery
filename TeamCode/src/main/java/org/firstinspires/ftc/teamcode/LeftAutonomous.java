@@ -14,15 +14,27 @@ public class LeftAutonomous extends AutonomousBase {
     @Override
     public void runOpModeImpl() {
         //extend tail
-        helper.drive(1.0, -12.0, 2);
-        telemetry.addData("done driving", "");
+        telemetry.addData("starting first drive!", "");
         telemetry.update();
+        helper.drive(0.1, -12.0, 30);
+        telemetry.addData("Done with first drive!", "");
+        telemetry.update();
+        sleep(5000);
         //detect jewel, detect vumark
         //hit jewel
-        helper.drive(1.0, 12.0, 2);
-        //helper.rotate(90, 1.0, 1.5, 1.0);
-        telemetry.addData("done rotation", "");
+        telemetry.addData("starting second drive!", "");
         telemetry.update();
+        helper.drive(1.0, 12.0, 30);
+        telemetry.addData("Done with second drive!", "");
+        telemetry.update();
+        sleep(5000);
+        telemetry.addData("starting rotate!", "");
+        telemetry.update();
+        helper.rotate(90, 1.0, 30, 1.0);
+        telemetry.addData("Done with rotate!", "");
+        telemetry.update();
+        sleep(5000);
+
         if (vuMark == RelicRecoveryVuMark.RIGHT){
             helper.goSideways(1.0, -8.0, 3);
         }

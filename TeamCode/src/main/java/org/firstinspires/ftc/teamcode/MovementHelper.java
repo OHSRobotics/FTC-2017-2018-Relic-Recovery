@@ -167,6 +167,10 @@ public class MovementHelper{
     }
 
     public void drive(double speed, double targetDistance, double timeoutS){
+
+        if(targetDistance < 0) {
+            speed = -Math.abs(speed);
+        }
         int target;
         runtime.reset();
         opMode.telemetry.addData("test from drive!", "");
@@ -175,7 +179,8 @@ public class MovementHelper{
         opMode.telemetry.update();
 
         if (opMode.opModeIsActive()) {
-
+            opMode.telemetry.addData("", "op mode active!");
+            opMode.telemetry.update();
             robot.leftDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             robot.leftBack.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             robot.rightDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -188,10 +193,10 @@ public class MovementHelper{
             robot.rightBack.setTargetPosition(target);
 
 
-            robot.leftDrive.setPower(speed);
-            robot.leftBack.setPower(speed);
-            robot.rightDrive.setPower(speed);
-            robot.rightBack.setPower(speed);
+            robot.leftDrive.setPower(.1);
+            robot.leftBack.setPower(.5);
+            robot.rightDrive.setPower(.1);
+            robot.rightBack.setPower(.5);
 
 
             opMode.telemetry.update();
@@ -203,7 +208,7 @@ public class MovementHelper{
         }
         while (opMode.opModeIsActive() && (runtime.seconds() < timeoutS) &&
                 (robot.leftDrive.isBusy() && robot.rightBack.isBusy() && robot.rightDrive.isBusy() && robot.leftBack.isBusy())){
-            opMode.telemetry.addData("test loop", "");
+            opMode.telemetry.addData("test loop", robot.rightBack.getTargetPosition() - robot.rightBack.getCurrentPosition());
             opMode.telemetry.update();
                 /*telemetry.addData("Path1",  "Running to %7d :%7d", inwardTarget);
                 telemetry.addData("Path2",  "Running at %7d :%7d",
@@ -216,6 +221,10 @@ public class MovementHelper{
 
             }
         }
+        robot.leftDrive.setPower(0);
+        robot.leftBack.setPower(0);
+        robot.rightDrive.setPower(0);
+        robot.rightBack.setPower(0);
 
     }
 
@@ -268,6 +277,11 @@ public class MovementHelper{
             // Turn off RUN_TO_POSITION
             robot.leftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             robot.rightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+            robot.leftDrive.setPower(0);
+            robot.leftBack.setPower(0);
+            robot.rightDrive.setPower(0);
+            robot.rightBack.setPower(0);
 
             //  sleep(250);   // optional pause after each move
         }

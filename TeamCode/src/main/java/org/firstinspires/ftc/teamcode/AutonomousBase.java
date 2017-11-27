@@ -16,7 +16,7 @@ public abstract class AutonomousBase extends OpModeBase {
 
     private HardwareK9bot   robot           = new HardwareK9bot();   // Use a Pushbot's hardware
 
-    protected static final double     COUNTS_PER_MOTOR_REV    = 1440;    // eg: TETRIX Motor Encoder
+    protected static final double     COUNTS_PER_MOTOR_REV    = 500;    // eg: TETRIX Motor Encoder
     protected static final double     DRIVE_GEAR_REDUCTION    = 2.0;     // This is < 1.0 if geared UP
     protected static final double     WHEEL_DIAMETER_INCHES   = 4.0;     // For figuring circumference
     protected static final double     COUNTS_PER_INCH         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) / (WHEEL_DIAMETER_INCHES * Math.PI);
@@ -33,14 +33,27 @@ public abstract class AutonomousBase extends OpModeBase {
     @Override
     public void runOpMode() throws InterruptedException {
         robot.init(hardwareMap);
+        for(DcMotor motor : robot.motors){
+            motor.setPower(0);
+            motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        }
         telemetry.addData("Starting autonomous!", "");
         telemetry.update();
-        getVuMark();
+        //getVuMark();
         waitForStart();
+        telemetry.addData("done with wait", "");
+        telemetry.update();
         robot.grabberL.setPosition(.45);
         robot.grabberR.setPosition(.9);
         runOpModeImpl();
     }
+
+   /* public static void sleep(long millis) {
+        try {
+            Thread.sleep(millis);
+        } catch(Exception e) {
+        }
+    }*/
 
     public abstract void runOpModeImpl();
 
