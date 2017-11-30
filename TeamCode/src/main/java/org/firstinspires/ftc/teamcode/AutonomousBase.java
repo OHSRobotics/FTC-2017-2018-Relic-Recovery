@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.corningrobotics.enderbots.endercv.CameraViewDisplay;
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
@@ -23,6 +24,7 @@ public abstract class AutonomousBase extends OpModeBase {
     protected static RelicRecoveryVuMark vuMark;
     public static final double SQRT_2 = Math.sqrt(2.0);
     public MovementHelper helper;
+    protected AutonomousVision vision;
 
     public AutonomousBase(boolean red) {
         this.helper = new MovementHelper(red, robot, this);
@@ -35,9 +37,14 @@ public abstract class AutonomousBase extends OpModeBase {
             motor.setPower(0);
             motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         }
+        vision = new AutonomousVision(this);
+        // can replace with ActivityViewDisplay.getInstance() for fullscreen
+        vision.init(hardwareMap.appContext, CameraViewDisplay.getInstance());
+        // start the vision system
+        vision.enable();
         telemetry.addData("Starting autonomous!", "");
         telemetry.update();
-        //getVuMark();
+        getVuMark();
         waitForStart();
         telemetry.addData("done with wait", "");
         telemetry.update();

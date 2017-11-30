@@ -16,34 +16,34 @@ public class LeftAutonomous extends AutonomousBase {
         //extend tail
         telemetry.addData("starting first drive!", "");
         telemetry.update();
-        helper.drive(0.1, -12.0, 30);
+        helper.drive(0.1, -12.0);
         telemetry.addData("Done with first drive!", "");
         telemetry.update();
         sleep(5000);
-        //detect jewel, detect vumark
+        boolean leftRed = vision.leftRed();
         //hit jewel
         telemetry.addData("starting second drive!", "");
         telemetry.update();
-        helper.drive(1.0, 12.0, 30);
+        helper.drive(1.0, 12.0);
         telemetry.addData("Done with second drive!", "");
         telemetry.update();
         sleep(5000);
         telemetry.addData("starting rotate!", "");
         telemetry.update();
-        helper.rotate(90, 1.0, 30, 1.0);
+        helper.rotate(90, 1.0);
         telemetry.addData("Done with rotate!", "");
         telemetry.update();
         sleep(5000);
 
         if (vuMark == RelicRecoveryVuMark.RIGHT){
-            helper.goSideways(1.0, -8.0, 3);
+            helper.goSideways(1.0, -8.0);
         }
         else if (vuMark == RelicRecoveryVuMark.CENTER){
-            helper.goSideways(1.0, 16.0, 4);
+            helper.goSideways(1.0, 16.0);
         }
         else if((vuMark ==  RelicRecoveryVuMark.LEFT) || (vuMark == RelicRecoveryVuMark.UNKNOWN)){
-            helper.goSideways(1.0, 20.0, 4);
+            helper.goSideways(1.0, 20.0);
         }
-        helper.drive(1.0, -48.0, 12);
+        helper.drive(1.0, -48.0);
     }
 }
