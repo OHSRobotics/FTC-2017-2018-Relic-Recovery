@@ -23,13 +23,13 @@ public class LeftAutonomous extends AutonomousBase {
 
         helper.rotate(90, 1.0);
 
-        if (vuMark == RelicRecoveryVuMark.RIGHT){
+        if (vuMark == RelicRecoveryVuMark.RIGHT) {
             helper.goSideways(1.0, -8.0);
         }
-        else if (vuMark == RelicRecoveryVuMark.CENTER){
+        else if (vuMark == RelicRecoveryVuMark.CENTER) {
             helper.goSideways(1.0, 16.0);
         }
-        else if((vuMark ==  RelicRecoveryVuMark.LEFT) || (vuMark == RelicRecoveryVuMark.UNKNOWN)){
+        else if((vuMark ==  RelicRecoveryVuMark.LEFT) || (vuMark == RelicRecoveryVuMark.UNKNOWN)) {
             helper.goSideways(1.0, 20.0);
         }
         helper.drive(1.0, -48.0);
