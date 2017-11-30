@@ -31,7 +31,6 @@ public class MovementHelper{
 
     private HardwareK9bot robot;
     private AutonomousBase opMode;
-    private double circumference = Math.random();
     private ElapsedTime runtime = new ElapsedTime();
 
     public MovementHelper(boolean red, HardwareK9bot robot, AutonomousBase opMode) {
@@ -48,91 +47,70 @@ public class MovementHelper{
         goSideways(speed, -distance);
     }
 
-    public void rotateCounterClockWise(double degrees, double speed) {
+    public void rotateCounterClockWise(int degrees, double speed) {
         rotate(degrees, speed);
     }
 
-    public void rotateClockWise(double degrees, double speed) {
+    public void rotateClockWise(int degrees, double speed) {
         rotate(-degrees, speed);
     }
 
-    public void rotate(double degrees, double speed) {
-        int turnTarget;
-        if(red)
-            turnTarget = (int)(circumference / 2 * degrees);
-        else
-            turnTarget = -(int)(circumference / 2 * degrees);
-
-        robot.leftDrive.setTargetPosition(turnTarget);
-        robot.leftBack.setTargetPosition(turnTarget);
-        robot.rightDrive.setTargetPosition(-turnTarget);
-        robot.rightBack.setTargetPosition(-turnTarget);
-
+    public void rotate(int degrees, double speed) {
+        /*
+        double turnTargetR = -(15.65 * Math.PI * (degrees / 360));
+        double turnTargetL = -turnTargetR;
+        */
+        robot.gyro.calibrate();
         for(DcMotor motor : robot.motors){
-            motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            motor.setPower(speed);
+            motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        }
+        if (degrees > 0) {
+            robot.leftDrive.setPower(speed);
+            robot.leftBack.setPower(speed);
+            robot.rightBack.setPower(-speed);
+            robot.rightDrive.setPower(-speed);
+        } else {
+            robot.leftDrive.setPower(-speed);
+            robot.leftBack.setPower(-speed);
+            robot.rightBack.setPower(speed);
+            robot.rightDrive.setPower(speed);
+        }
+        /*
+        while (opMode.opModeIsActive() && Math.abs(-robot.leftBack.getCurrentPosition() - (int)(turnTargetR / 12.57 * 1120)) > 50){
+            double currentInches = robot.leftBack.getCurrentPosition();
+            opMode.telemetry.addData("target", turnTargetR);
+            opMode.telemetry.addData("current", currentInches);
+            opMode.telemetry.addData("offset", -robot.leftBack.getCurrentPosition() - (int)(turnTargetR / 12.57 * 1120));
+            opMode.telemetry.update();
+        }*/
+        int heading = 0;
+        while (opMode.opModeIsActive() && Math.abs(heading - degrees) > 3){
+            heading = robot.gyro.getHeading();
+            if(degrees < 0)
+                heading -= 360;
+            opMode.telemetry.addData("target", degrees);
+            opMode.telemetry.addData("current", heading);
+            opMode.telemetry.addData("offset", Math.abs(robot.gyro.getHeading() - degrees));
+            opMode.telemetry.update();
+        }
+        for(DcMotor motor : robot.motors){
+            motor.setPower(0);
         }
     }
 
 
     public void goSideways(double speed, double targetDistance){
         if(red)
-            targetDistance = -targetDistance;
+            targetDistance *= -1;
 
-        int inwardTarget, outwardTarget;
-        if (opMode.opModeIsActive()){
-            inwardTarget = robot.rightBack.getCurrentPosition() + (int)(targetDistance * AutonomousTest.COUNTS_PER_INCH * Math.sqrt(2));
-            outwardTarget = robot.rightDrive.getCurrentPosition() + (int)(targetDistance * AutonomousTest.COUNTS_PER_INCH * -1 * Math.sqrt(2));
-            robot.leftDrive.setTargetPosition(inwardTarget);
-            robot.leftBack.setTargetPosition(inwardTarget);
-            robot.rightDrive.setTargetPosition(outwardTarget);
-            robot.rightBack.setTargetPosition(outwardTarget);
-
-            robot.leftDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            robot.leftBack.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            robot.rightDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            robot.rightBack.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            if (inwardTarget > 0){
-                robot.leftBack.setPower(speed);
-                robot.rightDrive.setPower(speed);
-                robot.leftDrive.setPower(-speed);
-                robot.rightBack.setPower(-speed);
-            } else {
-                robot.leftBack.setPower(-speed);
-                robot.rightDrive.setPower(-speed);
-                robot.leftDrive.setPower(speed);
-                robot.rightBack.setPower(speed);
-            }
-        }
-    }
-
-    public void goForward(double speed, double targetDistance){
-        int target = robot.rightBack.getCurrentPosition() + (int)(targetDistance * AutonomousTest.COUNTS_PER_INCH);
         for(DcMotor motor : robot.motors){
-            motor.setTargetPosition(target);
-            motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            motor.setPower(speed);
+            motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         }
-    }
-
-    public void goSideways(double speed, double targetDistance, double timeoutS){
-        runtime.reset();
-        if(opMode.opModeIsActive()) {
-            int inwardTarget, outwardTarget;
-            inwardTarget = robot.rightBack.getCurrentPosition() + (int)(targetDistance * COUNTS_PER_INCH * SQRT_2);
-            outwardTarget = robot.rightDrive.getCurrentPosition() + (int)(targetDistance * COUNTS_PER_INCH * -1 * SQRT_2);
-            robot.leftDrive.setTargetPosition(inwardTarget);
-            robot.leftBack.setTargetPosition(inwardTarget);
-            robot.rightDrive.setTargetPosition(outwardTarget);
-            robot.rightBack.setTargetPosition(outwardTarget);
-
-            robot.leftDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            robot.leftBack.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            robot.rightDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            robot.rightBack.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-            runtime.reset();
-            if (inwardTarget > 0){
+        int target = (int)(targetDistance / 12.57 * 1120 * Math.sqrt(2));
+        if (opMode.opModeIsActive()){
+            if (target > 0){
                 robot.leftBack.setPower(speed);
                 robot.rightDrive.setPower(speed);
                 robot.leftDrive.setPower(-speed);
@@ -143,27 +121,16 @@ public class MovementHelper{
                 robot.leftDrive.setPower(speed);
                 robot.rightBack.setPower(speed);
             }
-            while (opMode.opModeIsActive() && (runtime.seconds() < timeoutS) &&
-                    (robot.leftDrive.isBusy() && robot.rightBack.isBusy() && robot.rightDrive.isBusy() && robot.leftBack.isBusy())){
-                /*telemetry.addData("Path1",  "Running to %7d :%7d", inwardTarget);
-                telemetry.addData("Path2",  "Running at %7d :%7d",
-                        robot.leftDrive.getCurrentPosition(),
-                        robot.rightDrive.getCurrentPosition());*/
-                opMode.telemetry.update();
-            }
-
         }
-    }
-
-    public void rotate(double speed, double degrees, double timout, double tolerance) {
-        /*double targetHeading = robot.gyro.getHeading() + degrees;
-        targetHeading %= 360.0;
-        while(opMode.opModeIsActive() && (Math.abs(robot.gyro.getHeading()) - targetHeading) < tolerance) {
-            robot.leftDrive.setPower(-speed);
-            robot.leftBack.setPower(-speed);
-            robot.rightDrive.setPower(speed);
-            robot.rightBack.setPower(speed);
-        }*/
+        while (opMode.opModeIsActive() && (Math.abs(-robot.rightBack.getCurrentPosition() - target)) > 50 ){
+            double currentTicks = robot.rightBack.getCurrentPosition();
+            opMode.telemetry.addData("target", target);
+            opMode.telemetry.addData("current", currentTicks);
+            opMode.telemetry.update();
+        }
+        for(DcMotor motor : robot.motors){
+            motor.setPower(0);
+        }
     }
 
     public void drive(double speed, double targetDistance, double timeoutS){
@@ -181,15 +148,13 @@ public class MovementHelper{
         if (opMode.opModeIsActive()) {
             opMode.telemetry.addData("", "op mode active!");
             opMode.telemetry.update();
-            target = robot.leftDrive.getCurrentPosition() + (int)(targetDistance * COUNTS_PER_INCH);
             for(DcMotor motor : robot.motors){
                 motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-                motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                motor.setTargetPosition(target);
                 motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-                motor.setPower(.1);
             }
-
+            for(DcMotor motor : robot.motors){
+                motor.setPower(speed);
+            }
 
 
             opMode.telemetry.update();
@@ -199,20 +164,19 @@ public class MovementHelper{
 
             }
         }
-        while (opMode.opModeIsActive() && (runtime.seconds() < timeoutS) &&
-                (robot.leftDrive.isBusy() && robot.rightBack.isBusy() && robot.rightDrive.isBusy() && robot.leftBack.isBusy())){
-            opMode.telemetry.addData("test loop", robot.rightBack.getTargetPosition() - robot.rightBack.getCurrentPosition());
-            opMode.telemetry.update();
-                /*telemetry.addData("Path1",  "Running to %7d :%7d", inwardTarget);
-                telemetry.addData("Path2",  "Running at %7d :%7d",
-                        robot.leftDrive.getCurrentPosition(),
-                        robot.rightDrive.getCurrentPosition());*/
+        while (opMode.opModeIsActive() && (Math.abs(robot.rightBack.getCurrentPosition() - (int)(targetDistance / 12.57 * 1120))) > 50 ){
+                //(robot.leftDrive.isBusy() && robot.rightBack.isBusy() && robot.rightDrive.isBusy() && robot.leftBack.isBusy())){
+            double currentTicks = robot.rightBack.getCurrentPosition();
+            opMode.telemetry.addData("test loop", currentTicks);
             opMode.telemetry.update();
             try {
                 opMode.waitOneFullHardwareCycle();
             } catch(Exception e) {
 
             }
+        }
+        for (DcMotor motor : robot.motors){
+            motor.setPower(0);
         }
     }
 
