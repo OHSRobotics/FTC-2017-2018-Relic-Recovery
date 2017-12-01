@@ -20,7 +20,6 @@ public class LeftAutonomous extends AutonomousBase {
         //hit jewel
 
         helper.drive(1.0, 12.0);
-
         helper.rotate(90, 1.0);
 
         if (vuMark == RelicRecoveryVuMark.RIGHT) {
