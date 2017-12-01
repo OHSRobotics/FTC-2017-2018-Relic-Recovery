@@ -23,7 +23,7 @@ public class RightAutonomous extends AutonomousBase {
         waitForStart();
         //extend tail
         helper.drive(1.0, -12.0);
-        boolean leftRed = vision.leftRed();
+        /*boolean leftRed = vision.leftRed();*/
         //hit jewel
         helper.drive(1.0, 12.0);
         helper.rotate(180, 1.0);

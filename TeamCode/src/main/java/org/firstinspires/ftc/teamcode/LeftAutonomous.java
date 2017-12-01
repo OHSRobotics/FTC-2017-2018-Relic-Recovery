@@ -16,7 +16,7 @@ public class LeftAutonomous extends AutonomousBase {
         //extend tail
         helper.drive(0.1, -12.0);
 
-        boolean leftRed = vision.leftRed();
+        /*boolean leftRed = vision.leftRed();*/
         //hit jewel
 
         helper.drive(1.0, 12.0);
