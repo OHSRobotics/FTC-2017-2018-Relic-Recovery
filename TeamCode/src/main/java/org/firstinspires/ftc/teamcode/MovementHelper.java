@@ -163,7 +163,7 @@ public class MovementHelper{
             }
         }
         while (opMode.opModeIsActive() && (Math.abs(robot.rightBack.getCurrentPosition() - (int)(targetDistance / 12.57 * 1120))) > 50 ){
-                //(robot.leftDrive.isBusy() && robot.rightBack.isBusy() && robot.rightDrive.isBusy() && robot.leftBack.isBusy())){
+            //(robot.leftDrive.isBusy() && robot.rightBack.isBusy() && robot.rightDrive.isBusy() && robot.leftBack.isBusy())){
             double currentTicks = robot.rightBack.getCurrentPosition();
             opMode.telemetry.addData("test loop", currentTicks);
             opMode.telemetry.update();
@@ -178,8 +178,38 @@ public class MovementHelper{
         }
     }
 
-    public void diaganolDrive(double speed, int targetdistance){
+    public void diaganolDrive(double speed, int targetDistance, char direction){
 
+        if (opMode.opModeIsActive()) {
+            opMode.telemetry.addData("", "op mode active!");
+            opMode.telemetry.update();
+            for(DcMotor motor : robot.motors){
+                motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            }
+            if(direction =='l'){
+                robot.rightDrive.setPower(speed);
+                robot.leftBack.setPower(speed);
+            } else {
+                robot.leftDrive.setPower(speed);
+                robot.rightBack.setPower(speed);
+            }
+
+        }
+        while (opMode.opModeIsActive() && (Math.abs(robot.rightBack.getCurrentPosition() + robot.leftBack.getCurrentPosition() - (int)(targetDistance / 12.57 * 1120 * Math.sqrt(2) * 1.16))) > 50 ){
+            //(robot.leftDrive.isBusy() && robot.rightBack.isBusy() && robot.rightDrive.isBusy() && robot.leftBack.isBusy())){
+            double currentTicks = robot.rightBack.getCurrentPosition();
+            opMode.telemetry.addData("test loop", currentTicks);
+            opMode.telemetry.update();
+            try {
+                opMode.waitOneFullHardwareCycle();
+            } catch(Exception e) {
+
+            }
+        }
+        for (DcMotor motor : robot.motors){
+            motor.setPower(0);
+        }
     }
 
 }
