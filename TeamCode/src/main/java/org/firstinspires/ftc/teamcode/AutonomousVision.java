@@ -109,7 +109,6 @@ public class AutonomousVision extends OpenCVPipeline {
         done.set(true);
         opModeBase.telemetry.addData("result: is left red: ", Boolean.toString(redLeft));
 
-        opModeBase.telemetry.addData("time", "" + System.nanoTime());
         opModeBase.telemetry.update();
 
         // Then we display our nice little binary threshold on screen
@@ -120,7 +119,7 @@ public class AutonomousVision extends OpenCVPipeline {
 
     public boolean leftRed() {
 
-        while(!done.get()) {
+        while(!done.get() && opModeBase.opModeIsActive()) {
             try {
                 Thread.sleep(10);
             } catch(Exception e) {

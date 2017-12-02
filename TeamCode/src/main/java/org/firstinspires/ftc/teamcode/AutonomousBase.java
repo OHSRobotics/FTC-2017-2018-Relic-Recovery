@@ -16,6 +16,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 public abstract class AutonomousBase extends OpModeBase {
 
     private HardwareK9bot   robot           = new HardwareK9bot();   // Use a Pushbot's hardware
+    protected static final double FAST_SPEED = 0.4, SLOW_SPEED = 0.1, MEDIUM_SPEED = 0.2;
 
     protected static final double     COUNTS_PER_MOTOR_REV    = 280;    // eg: TETRIX Motor Encoder
     protected static final double     DRIVE_GEAR_REDUCTION    = 40.0;     // This is < 1.0 if geared UP
@@ -79,7 +80,7 @@ public abstract class AutonomousBase extends OpModeBase {
         VuforiaTrackables relicTrackables = this.vuforia.loadTrackablesFromAsset("RelicVuMark");
         VuforiaTrackable relicTemplate = relicTrackables.get(0);
         relicTrackables.activate();
-        while (true) {
+        while (opModeIsActive()) {
             vuMark = RelicRecoveryVuMark.from(relicTemplate);
             if (vuMark != RelicRecoveryVuMark.UNKNOWN)
                 break;

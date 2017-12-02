@@ -15,7 +15,7 @@ import org.firstinspires.ftc.teamcode.HardwareK9bot;
 @TeleOp(name="Telop Final", group="K9bot")
 public class FinalTeleOp extends OpModeBase {
     HardwareK9bot   robot           = new HardwareK9bot();
-    private static boolean useSingleController = true;
+    private static boolean useSingleController = false;
 
     @Override
     public void runOpMode() {

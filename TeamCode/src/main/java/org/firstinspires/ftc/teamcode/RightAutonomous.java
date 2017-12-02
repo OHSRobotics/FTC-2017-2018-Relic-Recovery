@@ -19,18 +19,22 @@ public class RightAutonomous extends AutonomousBase {
 
     @Override// Sudo code by Justin Kim
     public void runOpModeImpl() {
-        helper.drive(1.0, -7.0);
+        helper.drive(SLOW_SPEED, -7.0);
         hitJewel();
-        helper.drive(1.0, 12.0);
-        if (vuMark == RelicRecoveryVuMark.LEFT){
-            helper.goSideways(1.0, -36.0);
+        helper.drive(FAST_SPEED, 35);
+        helper.rotate(-90, SLOW_SPEED, false);
+
+        double middle = 36 - 5;
+        if (vuMark == RelicRecoveryVuMark.RIGHT) {
+            helper.drive(FAST_SPEED, middle + 8);
         }
-        else if (vuMark == RelicRecoveryVuMark.CENTER){
-            helper.goSideways(1.0, 28.0);
+        else if (vuMark == RelicRecoveryVuMark.CENTER) {
+            helper.drive(FAST_SPEED, middle);
         }
-        else if((vuMark ==  RelicRecoveryVuMark.RIGHT) || (vuMark == RelicRecoveryVuMark.UNKNOWN)){
-            helper.goSideways(1.0, 20.0);
+        else if((vuMark ==  RelicRecoveryVuMark.LEFT) || (vuMark == RelicRecoveryVuMark.UNKNOWN)) {
+            helper.drive(FAST_SPEED, middle - 8);
         }
-        helper.drive(1.0, -12.0);
+        helper.rotate(-45, SLOW_SPEED, true);
+        helper.diaganolDrive(FAST_SPEED, 60, 'l');
     }
 }

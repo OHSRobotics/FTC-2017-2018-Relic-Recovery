@@ -13,30 +13,27 @@ public class LeftAutonomous extends AutonomousBase {
 
     @Override
     public void runOpModeImpl() {
-        //extend tail
-        helper.drive(0.1, -7.0);
+        helper.drive(SLOW_SPEED, -7.0);
         hitJewel();
-        helper.drive(0.4, 35);
-        helper.rotate(-85, 0.1, false);
-        helper.drive(0.2, 33);
-        helper.rotate(-45, 0.1, true);
+        helper.drive(FAST_SPEED, 35);
+        helper.rotate(-85, SLOW_SPEED, false);
+        helper.drive(MEDIUM_SPEED, 33);
+        helper.rotate(-45, SLOW_SPEED, true);
         if (vuMark == RelicRecoveryVuMark.RIGHT) {
-            helper.diaganolDrive(0.4, 4, 'l');
+            helper.diaganolDrive(FAST_SPEED, 4, 'l');
         }
         else if (vuMark == RelicRecoveryVuMark.CENTER) {
-            helper.diaganolDrive(0.4, 12, 'l');
+            helper.diaganolDrive(FAST_SPEED, 12, 'l');
         }
         else if((vuMark ==  RelicRecoveryVuMark.LEFT) || (vuMark == RelicRecoveryVuMark.UNKNOWN)) {
-            helper.diaganolDrive(0.4, 20, 'l');
+            helper.diaganolDrive(FAST_SPEED, 20, 'l');
         }
-        helper.diaganolDrive(0.2, 20, 'r');
+        helper.diaganolDrive(MEDIUM_SPEED, 20, 'r');
 
 
         /*
-
         helper.drive(1.0, 12.0);
         helper.rotate(90, 1.0);
-
         if (vuMark == RelicRecoveryVuMark.RIGHT) {
             helper.goSideways(1.0, -8.0);
         }
