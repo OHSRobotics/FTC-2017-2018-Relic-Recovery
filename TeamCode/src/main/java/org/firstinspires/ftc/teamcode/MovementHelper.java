@@ -39,29 +39,13 @@ public class MovementHelper{
         this.opMode = opMode;
     }
 
-    public void goRight(double speed, double distance){
-        goSideways(speed, distance);
-    }
-
-    public void goLeft(double speed, double distance){
-        goSideways(speed, -distance);
-    }
-
-    public void rotateCounterClockWise(int degrees, double speed) {
-        rotate(degrees, speed);
-    }
-
-    public void rotateClockWise(int degrees, double speed) {
-        rotate(-degrees, speed);
-    }
-
-    public void rotate(int degrees, double speed) {
+    public void rotate(int degrees, double speed, boolean reset) {
         /*
         double turnTargetR = -(15.65 * Math.PI * (degrees / 360));
         double turnTargetL = -turnTargetR;
         */
-
-        robot.gyro.calibrate();
+        if(reset)
+            robot.gyro.calibrate();
         while(robot.gyro.isCalibrating()){
             opMode.telemetry.addData("chill out yo", "calibrating");
             opMode.telemetry.update();
