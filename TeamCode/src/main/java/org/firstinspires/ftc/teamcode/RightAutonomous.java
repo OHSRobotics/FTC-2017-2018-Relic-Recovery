@@ -19,7 +19,7 @@ public class RightAutonomous extends AutonomousBase {
 
     @Override// Sudo code by Justin Kim
     public void runOpModeImpl() {
-        helper.drive(1.0, -12.0);
+        helper.drive(1.0, -7.0);
         hitJewel();
         helper.drive(1.0, 12.0);
         if (vuMark == RelicRecoveryVuMark.LEFT){

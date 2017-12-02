@@ -15,6 +15,7 @@ public class LeftAutonomous extends AutonomousBase {
     public void runOpModeImpl() {
         //extend tail
         helper.drive(0.1, -7.0);
+        hitJewel();
         helper.drive(0.4, 35);
         helper.rotate(-85, 0.1, false);
         helper.drive(0.2, 33);
@@ -31,8 +32,6 @@ public class LeftAutonomous extends AutonomousBase {
         helper.diaganolDrive(0.2, 20, 'r');
 
 
-        /*boolean leftRed = vision.leftRed();*/
-        //hit jewel
         /*
 
         helper.drive(1.0, 12.0);

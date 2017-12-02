@@ -43,7 +43,7 @@ public abstract class AutonomousBase extends OpModeBase {
         vision = new AutonomousVision(this);
         vision.init(hardwareMap.appContext, CameraViewDisplay.getInstance());
         vision.enable();
-        //getVuMark();
+        getVuMark();
 
         waitForStart();
         robot.grabberL.setPosition(.45);// Grab the block
@@ -122,6 +122,15 @@ public abstract class AutonomousBase extends OpModeBase {
             hitLeft = false;
         }*/
         boolean hitLeft = leftRed ^ red;
+        if(hitLeft) robot.tail.setPosition(1);
+        else robot.tail.setPosition(0);
+        try {
+            waitOneFullHardwareCycle();
+        } catch(Exception e) {
+
+        }
+        telemetry.update();
+        sleep(200);
     }
 
 }
