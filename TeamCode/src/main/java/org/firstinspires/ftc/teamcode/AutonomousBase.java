@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.corningrobotics.enderbots.endercv.CameraViewDisplay;
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
@@ -24,9 +25,11 @@ public abstract class AutonomousBase extends OpModeBase {
     public static final double SQRT_2 = Math.sqrt(2.0);
     public MovementHelper helper;
     protected AutonomousVision vision;
+    private boolean red;
 
     public AutonomousBase(boolean red) {
         this.helper = new MovementHelper(red, robot, this);
+        this.red = red;
     }
 
     @Override
@@ -36,19 +39,16 @@ public abstract class AutonomousBase extends OpModeBase {
             motor.setPower(0);
             motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         }
-        /*vision = new AutonomousVision(this);
-        // can replace with ActivityViewDisplay.getInstance() for fullscreen
+
+        vision = new AutonomousVision(this);
         vision.init(hardwareMap.appContext, CameraViewDisplay.getInstance());
-        // start the vision system
-        vision.enable();*/
-        telemetry.addData("Starting autonomous!", "");
-        telemetry.update();
-        getVuMark();
+        vision.enable();
+        //getVuMark();
+
         waitForStart();
-        telemetry.addData("done with wait", "");
-        telemetry.update();
-        robot.grabberL.setPosition(.45);
+        robot.grabberL.setPosition(.45);// Grab the block
         robot.grabberR.setPosition(.9);
+        robot.tail.setPosition(0.5);//Extend tail
         runOpModeImpl();
     }
 
@@ -103,6 +103,25 @@ public abstract class AutonomousBase extends OpModeBase {
             }
         }
         return CameraUtil.jewelRed(left, right);
+    }
+
+    public void hitJewel() {
+        boolean leftRed = vision.leftRed();
+        vision.disable();
+        /*
+        if(leftRed && red) {
+            hitLeft = false;
+        }
+        if(!leftRed && red) {
+            hitLeft = true;
+        }
+        if(leftRed && !red) {
+            hitLeft = true;
+        }
+        if(!leftRed && !red) {
+            hitLeft = false;
+        }*/
+        boolean hitLeft = leftRed ^ red;
     }
 
 }

@@ -19,12 +19,8 @@ public class RightAutonomous extends AutonomousBase {
 
     @Override// Sudo code by Justin Kim
     public void runOpModeImpl() {
-        getVuMark();
-        waitForStart();
-        //extend tail
         helper.drive(1.0, -12.0);
-        /*boolean leftRed = vision.leftRed();*/
-        //hit jewel
+        hitJewel();
         helper.drive(1.0, 12.0);
         if (vuMark == RelicRecoveryVuMark.LEFT){
             helper.goSideways(1.0, -36.0);

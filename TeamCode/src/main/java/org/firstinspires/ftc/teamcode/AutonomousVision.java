@@ -11,8 +11,14 @@ import org.opencv.core.Mat;
 import org.opencv.core.MatOfPoint;
 import org.opencv.core.MatOfPoint2f;
 import org.opencv.core.Point;
+import org.opencv.core.Rect;
 import org.opencv.core.Scalar;
 import org.opencv.imgproc.Imgproc;
+
+import static com.sun.tools.doclint.Entity.image;
+import static org.opencv.imgproc.Imgproc.THRESH_BINARY;
+import static org.opencv.imgproc.Imgproc.fillPoly;
+import static org.opencv.imgproc.Imgproc.rectangle;
 
 /**
  * Created by guinea on 10/5/17.
@@ -30,10 +36,11 @@ public class AutonomousVision extends OpenCVPipeline {
     private Mat thresholdedRed2 = new Mat();
     private Mat thresholded_rgba = new Mat();
     private OpModeBase opModeBase;
-    private AtomicBoolean done = new AtomicBoolean(false), isRedRight = new AtomicBoolean(false);
+    private AtomicBoolean done = new AtomicBoolean(false), isRedLeft = new AtomicBoolean(false);
 
     public AutonomousVision(OpModeBase opModeBase) {
         this.opModeBase = opModeBase;
+
     }
 
     // This is called every camera frame.
@@ -48,6 +55,19 @@ public class AutonomousVision extends OpenCVPipeline {
         Core.inRange(hsv, new Scalar(0, 64, 32), new Scalar( 30, 255, 255), thresholdedRed2);
         Core.bitwise_xor(thresholdedRed1, thresholdedRed2, thresholdedRed, new Mat());
 
+        {//set the right half to black
+            int width =thresholdedRed.width(), height = thresholdedRed.height();
+            /*List<MatOfPoint> points = new ArrayList<MatOfPoint>(1);
+            points.add(new MatOfPoint(new Point(0, 0), new Point(width / 2, 0), new Point(width / 2, height), new Point(0, height)));
+            fillPoly(thresholdedRed, points, new Scalar(0, 0, 0));*/
+
+            List<MatOfPoint> points = new ArrayList<MatOfPoint>();
+            double x = width / 1.8;
+            points.add(new MatOfPoint(new Point(0, 0), new Point(x, 0), new Point(x, height), new Point(0, height)));
+            fillPoly(thresholdedRed, points, new Scalar(0, 0, 255));
+
+        }
+
         List<MatOfPoint> redContours = new ArrayList<MatOfPoint>();
         List<MatOfPoint> blueContours = new ArrayList<MatOfPoint>();
 
@@ -56,7 +76,7 @@ public class AutonomousVision extends OpenCVPipeline {
         double redX = 0, blueX = 0;
         if(blueContours.size() > 0) {
             MatOfPoint max = blueContours.get(0);
-            for (int i = 0; i < blueContours.size(); i++) {
+            for (int i = 1; i < blueContours.size(); i++) {
                 if(Imgproc.contourArea(blueContours.get(i)) > Imgproc.contourArea(max)) {
                     max = blueContours.get(i);
                 }
@@ -84,10 +104,10 @@ public class AutonomousVision extends OpenCVPipeline {
             opModeBase.telemetry.addData("red largest: ", Imgproc.contourArea(max));
             opModeBase.telemetry.addData("red x", " " + redX);
         }
-        boolean redRight = redX > blueX;
-        isRedRight.set(redRight);
+        boolean redLeft = redX < blueX;
+        isRedLeft.set(redLeft);
         done.set(true);
-        opModeBase.telemetry.addData("result: is right red: ", Boolean.toString(redRight));
+        opModeBase.telemetry.addData("result: is left red: ", Boolean.toString(redLeft));
 
         opModeBase.telemetry.addData("time", "" + System.nanoTime());
         opModeBase.telemetry.update();
@@ -107,6 +127,6 @@ public class AutonomousVision extends OpenCVPipeline {
 
             }
         }
-        return isRedRight.get();
+        return isRedLeft.get();
     }
 }
