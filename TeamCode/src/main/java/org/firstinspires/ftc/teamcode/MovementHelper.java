@@ -38,6 +38,14 @@ public class MovementHelper{
         this.robot = robot;
         this.opMode = opMode;
     }
+    public void calibrate(){
+        robot.gyro.calibrate();
+        while(robot.gyro.isCalibrating()){
+            opMode.telemetry.addData("chill out yo", "calibrating");
+            opMode.telemetry.update();
+        }
+    }
+
 
     public void rotate(int degrees, double speed, boolean reset) {
         /*

@@ -69,7 +69,7 @@ public class FinalTeleOp extends OpModeBase {
             if(getGamepad(2).a){//A is grab
                 robot.grabberL.setPosition(.9);
                 robot.grabberR.setPosition(.45);
-            } else if (getGamepad(2).b){//B is release
+            } else if (getGamepad(2).b){//B is releasehhftt
                 robot.grabberL.setPosition(.45);
                 robot.grabberR.setPosition(.9);
             }

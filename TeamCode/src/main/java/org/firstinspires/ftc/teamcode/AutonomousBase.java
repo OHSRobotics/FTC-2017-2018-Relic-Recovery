@@ -16,10 +16,10 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 public abstract class AutonomousBase extends OpModeBase {
 
     private HardwareK9bot   robot           = new HardwareK9bot();   // Use a Pushbot's hardware
-    protected static final double FAST_SPEED = 0.4, SLOW_SPEED = 0.1, MEDIUM_SPEED = 0.2;
+    protected static final double FAST_SPEED = 0.4, SLOW_SPEED = 0.1, MEDIUM_SPEED = 0.2, DRIVE_BACK_INCHES = 32.5;
 
     protected static final double     COUNTS_PER_MOTOR_REV    = 280;    // eg: TETRIX Motor Encoder
-    protected static final double     DRIVE_GEAR_REDUCTION    = 40.0;     // This is < 1.0 if geared UP
+    protected static final double     DRIVE_GEAR_REDUCTION    = 40.0;     // This is < 1.0 if   geared UP
     protected static final double     WHEEL_DIAMETER_INCHES   = 4.0;     // For figuring circumference
     protected static final double     COUNTS_PER_INCH         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) / (WHEEL_DIAMETER_INCHES * Math.PI);
     protected static RelicRecoveryVuMark vuMark;
@@ -44,7 +44,7 @@ public abstract class AutonomousBase extends OpModeBase {
         vision = new AutonomousVision(this);
         vision.init(hardwareMap.appContext, CameraViewDisplay.getInstance());
         vision.enable();
-        getVuMark();
+        //getVuMark();
 
         waitForStart();
         robot.grabberL.setPosition(.45);// Grab the block
@@ -123,8 +123,8 @@ public abstract class AutonomousBase extends OpModeBase {
             hitLeft = false;
         }*/
         boolean hitLeft = leftRed ^ red;
-        if(hitLeft) robot.tail.setPosition(1);
-        else robot.tail.setPosition(0);
+        if(hitLeft) robot.tail.setPosition(0);
+        else robot.tail.setPosition(1);
         try {
             waitOneFullHardwareCycle();
         } catch(Exception e) {
