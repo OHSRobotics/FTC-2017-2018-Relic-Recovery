@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.Range;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
@@ -30,18 +31,19 @@ public class MovementHelper{
     private boolean red;
 
     private HardwareK9bot robot;
-    private AutonomousBase opMode;
+    private OpModeBase opMode;
     private ElapsedTime runtime = new ElapsedTime();
+    private static final int SLOW_DOWN_TURN_DEGREES = 20;
 
-    public MovementHelper(boolean red, HardwareK9bot robot, AutonomousBase opMode) {
+    public MovementHelper(boolean red, HardwareK9bot robot, OpModeBase opMode) {
         this.red = red;
         this.robot = robot;
         this.opMode = opMode;
     }
     public void calibrate(){
-        robot.gyro.calibrate();
+        robot.gyro.realCalibrate();
         while(robot.gyro.isCalibrating()){
-            opMode.telemetry.addData("chill out yo", "calibrating");
+            opMode.telemetry.addData("chill out yo", "gyro calibrating");
             opMode.telemetry.update();
         }
     }
@@ -53,26 +55,16 @@ public class MovementHelper{
         double turnTargetL = -turnTargetR;
         */
         if(reset)
-            robot.gyro.calibrate();
+            robot.gyro.fakeCalibrate();
         while(robot.gyro.isCalibrating()){
             opMode.telemetry.addData("chill out yo", "calibrating");
             opMode.telemetry.update();
         }
-        for(DcMotor motor : robot.motors){
+        for(DcMotor motor : robot.motors)
             motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        for(DcMotor motor : robot.motors)
             motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        }
-        if (degrees > 0) {
-            robot.leftDrive.setPower(speed);
-            robot.leftBack.setPower(speed);
-            robot.rightBack.setPower(-speed);
-            robot.rightDrive.setPower(-speed);
-        } else {
-            robot.leftDrive.setPower(-speed);
-            robot.leftBack.setPower(-speed);
-            robot.rightBack.setPower(speed);
-            robot.rightDrive.setPower(speed);
-        }
+        setSpeed(degrees, speed);
         /*
         while (opMode.opModeIsActive() && Math.abs(-robot.leftBack.getCurrentPosition() - (int)(turnTargetR / 12.57 * 1120)) > 50){
             double currentInches = robot.leftBack.getCurrentPosition();
@@ -82,8 +74,14 @@ public class MovementHelper{
             opMode.telemetry.update();
         }*/
         int heading = 0;
-        while (opMode.opModeIsActive() && Math.abs(heading - degrees) > 3){
-            heading = -robot.gyro.getIntegratedZValue();
+        int distanceToTarget;
+        while (opMode.opModeIsActive() && (distanceToTarget = Math.abs(heading - degrees)) > 3) {
+            if(distanceToTarget < SLOW_DOWN_TURN_DEGREES) {
+                double betterSpeed = speed * (distanceToTarget / SLOW_DOWN_TURN_DEGREES);
+                setSpeed(distanceToTarget, betterSpeed);
+                opMode.telemetry.addData("speed", "" + betterSpeed);
+            }
+            heading = -robot.gyro.getZThing();
             //if(degrees > 0)
             //    heading = -(robot.gyro.getHeading() - 360);
             opMode.telemetry.addData("target", degrees);
@@ -93,6 +91,20 @@ public class MovementHelper{
         }
         for(DcMotor motor : robot.motors){
             motor.setPower(0);
+        }
+    }
+
+    private void setSpeed(int target, double speed) {
+        if (target > 0) {
+            robot.leftBack.setPower(speed);
+            robot.rightDrive.setPower(speed);
+            robot.leftDrive.setPower(-speed);
+            robot.rightBack.setPower(-speed);
+        } else {
+            robot.leftBack.setPower(-speed);
+            robot.rightDrive.setPower(-speed);
+            robot.leftDrive.setPower(speed);
+            robot.rightBack.setPower(speed);
         }
     }
 
@@ -106,19 +118,8 @@ public class MovementHelper{
             motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         }
         int target = (int)(targetDistance / 12.57 * 1120 * Math.sqrt(2));
-        if (opMode.opModeIsActive()){
-            if (target > 0){
-                robot.leftBack.setPower(speed);
-                robot.rightDrive.setPower(speed);
-                robot.leftDrive.setPower(-speed);
-                robot.rightBack.setPower(-speed);
-            } else {
-                robot.leftBack.setPower(-speed);
-                robot.rightDrive.setPower(-speed);
-                robot.leftDrive.setPower(speed);
-                robot.rightBack.setPower(speed);
-            }
-        }
+
+        setSpeed(target, speed);
         while (opMode.opModeIsActive() && (Math.abs(-robot.rightBack.getCurrentPosition() - target)) > 50 ){
             double currentTicks = robot.rightBack.getCurrentPosition();
             opMode.telemetry.addData("target", target);

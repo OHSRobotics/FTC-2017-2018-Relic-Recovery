@@ -12,7 +12,7 @@ public class MatOfPoint extends Mat {
         super();
     }
 
-    protected MatOfPoint(long addr) {
+    public MatOfPoint(long addr) {
         super(addr);
         if( !empty() && checkVector(_channels, _depth) < 0 )
             throw new IllegalArgumentException("Incompatible Mat");

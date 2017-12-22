@@ -40,7 +40,10 @@ public abstract class AutonomousBase extends OpModeBase {
             motor.setPower(0);
             motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         }
+        helper.calibrate();
+        helper.rotate(45, 0.3, false);
 
+        /*
         vision = new AutonomousVision(this);
         vision.init(hardwareMap.appContext, CameraViewDisplay.getInstance());
         vision.enable();
@@ -50,7 +53,7 @@ public abstract class AutonomousBase extends OpModeBase {
         robot.grabberL.setPosition(.45);// Grab the block
         robot.grabberR.setPosition(.9);
         robot.tail.setPosition(0.5);//Extend tail
-        runOpModeImpl();
+        runOpModeImpl();*/
     }
 
    /* public static void sleep(long millis) {
