@@ -34,26 +34,28 @@ public abstract class AutonomousBase extends OpModeBase {
     }
 
     @Override
-    public void runOpMode() throws InterruptedException {
+    public void runOpMode(){
         robot.init(hardwareMap);
         for(DcMotor motor : robot.motors){
             motor.setPower(0);
             motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         }
-        helper.calibrate();
-        helper.rotate(45, 0.3, false);
 
-        /*
-        vision = new AutonomousVision(this);
+
+        /*vision = new AutonomousVision(this);
         vision.init(hardwareMap.appContext, CameraViewDisplay.getInstance());
-        vision.enable();
-        //getVuMark();
+        vision.enable();*/
+
 
         waitForStart();
+        getVuMark();
+        //vision.disable();
+        //getVuMark();
+
         robot.grabberL.setPosition(.45);// Grab the block
         robot.grabberR.setPosition(.9);
-        robot.tail.setPosition(0.5);//Extend tail
-        runOpModeImpl();*/
+        //robot.tail.setPosition(0.5);//Extend tail*/
+        runOpModeImpl();
     }
 
    /* public static void sleep(long millis) {
@@ -92,6 +94,42 @@ public abstract class AutonomousBase extends OpModeBase {
         telemetry.addData("VuMark", "%s visible", vuMark);
     }
 
+
+
+    public void newJewel() {
+        robot.Color_Sensor.enableLed(true);
+        robot.tail.setPosition(.75);
+        sleep(1000);
+        boolean redRight = robot.Color_Sensor.red() > 0;
+        telemetry.addData("red", robot.Color_Sensor.red());
+        telemetry.update();
+
+        robot.Color_Sensor.enableLed(false);
+        if(redRight) {
+            if(!red) {
+                helper.rotate(10, 0.1, true);
+                //helper.rotate(-5, 0.15, false);
+                telemetry.addData("red right, blue team", null);
+            } else {
+                helper.rotate(-10, 0.1, true);
+                //helper.rotate(5, 0.15, false);
+                telemetry.addData("red right, red team", null);
+            }
+        } else {
+            if (red) {
+                helper.rotate(10, 0.1, true);
+                //helper.rotate(-5, 0.15, false);
+                telemetry.addData("red left, red team", null);
+            } else {
+                helper.rotate(-10, 0.1, true);
+                //helper.rotate(5, 0.15, false);
+                telemetry.addData("red left, blue team", null);
+            }
+        }
+        robot.tail.setPosition((0));
+        helper.drive(0.1, 2);
+    }
+
     public boolean hitRight() {
         Bitmap bitmap = BitmapStealer.STEAL_BITMAP();
         int width = bitmap.getWidth(), halfWidth = width / 2, height = bitmap.getHeight();
@@ -111,7 +149,7 @@ public abstract class AutonomousBase extends OpModeBase {
 
     public void hitJewel() {
         boolean leftRed = vision.leftRed();
-        vision.disable();
+
         /*
         if(leftRed && red) {
             hitLeft = false;

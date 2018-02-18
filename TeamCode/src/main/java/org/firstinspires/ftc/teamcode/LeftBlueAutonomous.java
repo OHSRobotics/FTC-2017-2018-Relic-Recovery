@@ -13,32 +13,19 @@ public class LeftBlueAutonomous extends AutonomousBase {
 
     @Override
     public void runOpModeImpl() {
-        helper.calibrate();
-        helper.drive(SLOW_SPEED, -7.0);
-        hitJewel();
-        helper.drive(FAST_SPEED, DRIVE_BACK_INCHES);
-        helper.rotate(-87, SLOW_SPEED, false);
-        helper.drive(MEDIUM_SPEED, 22);
-        helper.rotate(-45, SLOW_SPEED, true);
-        if (vuMark == RelicRecoveryVuMark.RIGHT) {
-            helper.diaganolDrive(MEDIUM_SPEED, 0, 'l');
+        newJewel();
+        helper.rotate(-87, 0.15, false);
+        helper.drive(0.2, 27);
+        helper.rotate(-45, -0.15, false);
+        if (vuMark == RelicRecoveryVuMark.LEFT) {
+            helper.diaganolDrive(-0.2, -8, 'r');
         }
-        else if (vuMark == RelicRecoveryVuMark.CENTER) {
-            helper.diaganolDrive(MEDIUM_SPEED, 8, 'l');
+        else if (vuMark == RelicRecoveryVuMark.RIGHT) {
+            helper.diaganolDrive(.2, 5, 'r');
         }
-        else if((vuMark ==  RelicRecoveryVuMark.LEFT) || (vuMark == RelicRecoveryVuMark.UNKNOWN)) {
-            helper.diaganolDrive(MEDIUM_SPEED,16 , 'l');
+        else if((vuMark ==  RelicRecoveryVuMark.CENTER) || (vuMark == RelicRecoveryVuMark.UNKNOWN)) {
+            helper.diaganolDrive(-.2, -2, 'r');
         }
-        helper.diaganolDrive(MEDIUM_SPEED, 20, 'r');
-
-
-        /*+
-        se if (vuMark == RelicRecoveryVuMark.CENTER) {
-            helper.goSideways(1.0, 16.0);
-        }
-        else if((vuMark ==  RelicRecoveryVuMark.LEFT) || (vuMark == RelicRecoveryVuMark.UNKNOWN)) {
-            helper.goSideways(1.0, 20.0);
-        }
-        helper.drive(1.0, -48.0); */
+        helper.diaganolDrive(0.4, 10, 'l');
     }
 }

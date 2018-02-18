@@ -19,8 +19,7 @@ public class RightBlueAutonomous extends AutonomousBase {
     @Override// Sudo code by Justin Kim
     public void runOpModeImpl() {
 
-
-    helper.calibrate();
+        helper.calibrate();
         helper.drive(SLOW_SPEED, -7.0);
         hitJewel();
         helper.drive(FAST_SPEED, DRIVE_BACK_INCHES);

@@ -72,8 +72,17 @@ public class FinalTeleOp extends OpModeBase {
             } else if (getGamepad(2).b){//B is releasehhftt
                 robot.grabberL.setPosition(.45);
                 robot.grabberR.setPosition(.9);
+            } else if(getGamepad(2).x) {//A is grab
+                robot.grabberL.setPosition(.75);
+                robot.grabberR.setPosition(.7);
             }
-
+            robot.tail.setPosition(0);
+            telemetry.addData("Lift Power: ", getGamepad(2).right_trigger - getGamepad(2).left_trigger);
+            telemetry.addData("Left Front", leftDrive);
+            telemetry.addData("Left Back", leftBack);
+            telemetry.addData("Right Front", rightDrive);
+            telemetry.addData("Right Back", rightBack);
+            telemetry.addData("Gyro:", robot.gyro.getHeading());
             telemetry.update();
 
             // Pause for 40 mS each cycle = update 25 times a second.

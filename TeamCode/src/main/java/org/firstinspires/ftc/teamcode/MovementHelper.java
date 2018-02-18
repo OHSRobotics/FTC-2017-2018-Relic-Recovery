@@ -41,11 +41,18 @@ public class MovementHelper{
         this.opMode = opMode;
     }
     public void calibrate(){
-        robot.gyro.realCalibrate();
-        while(robot.gyro.isCalibrating()){
+        robot.gyro.calibrate();
+        while(robot.gyro.isCalibrating() && opMode.opModeIsActive()){
             opMode.telemetry.addData("chill out yo", "gyro calibrating");
             opMode.telemetry.update();
         }
+    }
+
+    int heading(){
+        if(robot.gyro.getHeading() > 180)
+            return 360 - robot.gyro.getHeading();
+        else
+            return -robot.gyro.getHeading();
     }
 
 
@@ -55,11 +62,7 @@ public class MovementHelper{
         double turnTargetL = -turnTargetR;
         */
         if(reset)
-            robot.gyro.fakeCalibrate();
-        while(robot.gyro.isCalibrating()){
-            opMode.telemetry.addData("chill out yo", "calibrating");
-            opMode.telemetry.update();
-        }
+            calibrate();
         for(DcMotor motor : robot.motors)
             motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         for(DcMotor motor : robot.motors)
@@ -73,20 +76,17 @@ public class MovementHelper{
             opMode.telemetry.addData("offset", -robot.leftBack.getCurrentPosition() - (int)(turnTargetR / 12.57 * 1120));
             opMode.telemetry.update();
         }*/
-        int heading = 0;
-        int distanceToTarget;
-        while (opMode.opModeIsActive() && (distanceToTarget = Math.abs(heading - degrees)) > 3) {
-            if(distanceToTarget < SLOW_DOWN_TURN_DEGREES) {
+        while (!opMode.isStopRequested() && opMode.opModeIsActive() && (Math.abs(heading() - degrees)) > 3) {
+            /*if(offset < SLOW_DOWN_TURN_DEGREES) {
                 double betterSpeed = speed * (distanceToTarget / SLOW_DOWN_TURN_DEGREES);
                 setSpeed(distanceToTarget, betterSpeed);
                 opMode.telemetry.addData("speed", "" + betterSpeed);
-            }
-            heading = -robot.gyro.getZThing();
-            //if(degrees > 0)
-            //    heading = -(robot.gyro.getHeading() - 360);
+            }*/
+            setSpeed(degrees, speed);
+            //heading = -robot.gyro.getZThing();
             opMode.telemetry.addData("target", degrees);
-            opMode.telemetry.addData("current", heading);
-            opMode.telemetry.addData("offset", Math.abs(heading - degrees));
+            opMode.telemetry.addData("current", heading());
+            opMode.telemetry.addData("offset", Math.abs(heading() - degrees));
             opMode.telemetry.update();
         }
         for(DcMotor motor : robot.motors){
@@ -97,13 +97,13 @@ public class MovementHelper{
     private void setSpeed(int target, double speed) {
         if (target > 0) {
             robot.leftBack.setPower(speed);
-            robot.rightDrive.setPower(speed);
-            robot.leftDrive.setPower(-speed);
+            robot.leftDrive.setPower(speed);
+            robot.rightDrive.setPower(-speed);
             robot.rightBack.setPower(-speed);
         } else {
             robot.leftBack.setPower(-speed);
-            robot.rightDrive.setPower(-speed);
-            robot.leftDrive.setPower(speed);
+            robot.leftDrive.setPower(-speed);
+            robot.rightDrive.setPower(speed);
             robot.rightBack.setPower(speed);
         }
     }
@@ -115,12 +115,12 @@ public class MovementHelper{
 
         for(DcMotor motor : robot.motors){
             motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         }
         int target = (int)(targetDistance / 12.57 * 1120 * Math.sqrt(2));
 
         setSpeed(target, speed);
-        while (opMode.opModeIsActive() && (Math.abs(-robot.rightBack.getCurrentPosition() - target)) > 50 ){
+        while (opMode.opModeIsActive() && (Math.abs(-robot.leftDrive.getCurrentPosition() - target)) > 50 ){
             double currentTicks = robot.rightBack.getCurrentPosition();
             opMode.telemetry.addData("target", target);
             opMode.telemetry.addData("current", currentTicks);
@@ -133,37 +133,102 @@ public class MovementHelper{
 
     public void drive(double speed, double targetDistance){
 
+
+        if (opMode.opModeIsActive()) {
+            opMode.telemetry.addData("", "op mode active!");
+            opMode.telemetry.update();
+
+            robot.leftDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            robot.rightDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            robot.leftBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            robot.rightBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+            robot.leftDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            robot.rightDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            robot.leftBack.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            robot.rightBack.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            opMode.telemetry.update();
+            try {
+                opMode.waitOneFullHardwareCycle();
+            } catch(Exception e) {
+
+            }
+
+        }
+        while (!opMode.isStopRequested() && opMode.opModeIsActive() && (Math.abs(robot.leftBack.getCurrentPosition() - (int)(targetDistance / 12.57 * 1120))) > 50 ){
+            //(robot.leftDrive.isBusy() && robot.rightBack.isBusy() && robot.rightDrive.isBusy() && robot.leftBack.isBusy())){
+            double LeftBackTicks = robot.leftBack.getCurrentPosition();
+            opMode.telemetry.addData("Left Back", LeftBackTicks);
+            double RightBackTicks = robot.rightBack.getCurrentPosition();
+            opMode.telemetry.addData("right back", RightBackTicks);
+            double LeftFrontTicks = robot.leftDrive.getCurrentPosition();
+            opMode.telemetry.addData("left front", LeftFrontTicks);
+            double RightFrontTicks = robot.rightDrive.getCurrentPosition();
+            opMode.telemetry.addData("right front", RightFrontTicks);
+            opMode.telemetry.update();
+            speed = (1 -((double)robot.leftBack.getCurrentPosition() / (targetDistance / 12.57 * 1120))) * speed + .1;
+            if(targetDistance < 0)
+                speed *= -1;
+            robot.leftDrive.setPower(speed);
+            robot.rightDrive.setPower(speed);
+            robot.leftBack.setPower(speed);
+            robot.rightBack.setPower(speed);
+            try {
+                opMode.waitOneFullHardwareCycle();
+            } catch(Exception e) {
+            }
+        }
+        for (DcMotor motor : robot.motors){
+            motor.setPower(0);
+        }
+    }
+
+    public void testDrive(double speed, double targetDistance){
+
         if(targetDistance < 0) {
             speed = -Math.abs(speed);
         }
         if (opMode.opModeIsActive()) {
             opMode.telemetry.addData("", "op mode active!");
             opMode.telemetry.update();
-            for(DcMotor motor : robot.motors){
-                motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-                motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-            }
-            for(DcMotor motor : robot.motors){
-                motor.setPower(speed);
-            }
+            robot.leftDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            robot.rightDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            robot.leftBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            robot.rightBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-
+            robot.leftDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            robot.rightDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            robot.leftBack.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            robot.rightBack.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             opMode.telemetry.update();
             try {
                 opMode.waitOneFullHardwareCycle();
             } catch(Exception e) {
 
             }
+            robot.leftDrive.setTargetPosition(1000);
+            robot.rightDrive.setTargetPosition(1000);
+            robot.leftBack.setTargetPosition(1000);
+            robot.rightBack.setTargetPosition(1000);
+            robot.leftDrive.setPower(speed);
+            robot.rightDrive.setPower(speed);
+            robot.leftBack.setPower(speed);
+            robot.rightBack.setPower(speed);
         }
-        while (opMode.opModeIsActive() && (Math.abs(robot.rightBack.getCurrentPosition() - (int)(targetDistance / 12.57 * 1120))) > 50 ){
+        while (!opMode.isStopRequested() && opMode.opModeIsActive() && (Math.abs(robot.leftBack.getCurrentPosition() - (int)(targetDistance / 12.57 * 1120))) > 50 ){
             //(robot.leftDrive.isBusy() && robot.rightBack.isBusy() && robot.rightDrive.isBusy() && robot.leftBack.isBusy())){
-            double currentTicks = robot.rightBack.getCurrentPosition();
-            opMode.telemetry.addData("test loop", currentTicks);
+            double LeftBackTicks = robot.leftBack.getCurrentPosition();
+            opMode.telemetry.addData("Left Back", LeftBackTicks);
+            double RightBackTicks = robot.rightBack.getCurrentPosition();
+            opMode.telemetry.addData("right back", RightBackTicks);
+            double LeftFrontTicks = robot.leftDrive.getCurrentPosition();
+            opMode.telemetry.addData("left front", LeftFrontTicks);
+            double RightFrontTicks = robot.rightDrive.getCurrentPosition();
+            opMode.telemetry.addData("right front", RightFrontTicks);
             opMode.telemetry.update();
             try {
                 opMode.waitOneFullHardwareCycle();
             } catch(Exception e) {
-
             }
         }
         for (DcMotor motor : robot.motors){
@@ -189,10 +254,16 @@ public class MovementHelper{
             }
 
         }
-        while (opMode.opModeIsActive() && (Math.abs(robot.rightBack.getCurrentPosition() + robot.leftBack.getCurrentPosition() - (int)(targetDistance / 12.57 * 1120 * Math.sqrt(2) * 1.16))) > 50 ){
+        while (!opMode.isStopRequested() && opMode.opModeIsActive() && (Math.abs(robot.leftBack.getCurrentPosition() - (int)(targetDistance / 12.57 * 1120 * Math.sqrt(2) * 1.5)) > 50) && (Math.abs(robot.rightBack.getCurrentPosition() - (int)(targetDistance / 12.57 * 1120 * Math.sqrt(2) * 1.5)) > 50)){
             //(robot.leftDrive.isBusy() && robot.rightBack.isBusy() && robot.rightDrive.isBusy() && robot.leftBack.isBusy())){
-            double currentTicks = robot.rightBack.getCurrentPosition();
-            opMode.telemetry.addData("test loop", currentTicks);
+            double LeftBackTicks = robot.leftBack.getCurrentPosition();
+            opMode.telemetry.addData("Left Back", LeftBackTicks);
+            double RightBackTicks = robot.rightBack.getCurrentPosition();
+            opMode.telemetry.addData("right back", RightBackTicks);
+            double LeftFrontTicks = robot.leftDrive.getCurrentPosition();
+            opMode.telemetry.addData("left front", LeftFrontTicks);
+            double RightFrontTicks = robot.rightDrive.getCurrentPosition();
+            opMode.telemetry.addData("right front", RightFrontTicks);
             opMode.telemetry.update();
             try {
                 opMode.waitOneFullHardwareCycle();
@@ -204,5 +275,4 @@ public class MovementHelper{
             motor.setPower(0);
         }
     }
-
 }
