@@ -1,5 +1,11 @@
 package org.firstinspires.ftc.teamcode;
 
 public class test {
-    //shut up github
+    int dummy = 10;
+    test() {
+        dummy = 0;
+    }
+    test(int i) {
+        dummy = i;
+    }
 }
