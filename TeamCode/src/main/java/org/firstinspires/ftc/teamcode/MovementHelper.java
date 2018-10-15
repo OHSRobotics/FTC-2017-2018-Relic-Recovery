@@ -55,7 +55,6 @@ public class MovementHelper{
             return -robot.gyro.getHeading();
     }
 
-
     public void rotate(int degrees, double speed, boolean reset) {
         /*
         double turnTargetR = -(15.65 * Math.PI * (degrees / 360));

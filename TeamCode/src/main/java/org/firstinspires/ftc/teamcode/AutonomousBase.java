@@ -24,6 +24,7 @@ public abstract class AutonomousBase extends OpModeBase {
     protected static final double     COUNTS_PER_INCH         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) / (WHEEL_DIAMETER_INCHES * Math.PI);
     protected static RelicRecoveryVuMark vuMark;
     public static final double SQRT_2 = Math.sqrt(2.0);
+    public static final double FOOT_SQRT_2 = Math.sqrt(2.0) * 12;
     public MovementHelper helper;
     protected AutonomousVision vision;
     private boolean red;
@@ -173,6 +174,14 @@ public abstract class AutonomousBase extends OpModeBase {
         }
         telemetry.update();
         sleep(200);
+    }
+
+    public void dropTrophy() {
+        //do something
+    }
+
+    enum Position {
+        LEFT, MIDDLE, RIGHT;
     }
 
 }
